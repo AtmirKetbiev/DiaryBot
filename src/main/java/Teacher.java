@@ -2,21 +2,29 @@ import java.util.LinkedList;
 
 public class Teacher {
     private int idTeacher;
-    private LinkedList course;
-    private LinkedList task;
-    private LinkedList repositories;
+    private LinkedList<Course> course;
+    private LinkedList<String> repositories;
 
-    String getCourse () {
-        StringBuilder allCourse = new StringBuilder();
-        for(Object o : course){
-            allCourse.append(o).append("\n");
+    Teacher (int idTeacher) {
+        this.idTeacher = idTeacher;
+    }
+
+    String[] getCourse () {
+        String[] courses = new String[course.size()];
+        int i = -1;
+        for (Course s : course) {
+            courses[i++] += s.getName();
         }
-        return allCourse.toString();
+        return (courses);
     }
 
     void addCourse (String name) {
         Course course = new Course();
-        this.course.addLast(name);
+        this.course.addLast(course);
+    }
+
+    void deleteCourse(String name) {
+
     }
 
     String getRepositories() {
@@ -31,11 +39,4 @@ public class Teacher {
         repositories.addLast(name);
     }
 
-    void getGroup () {
-        Group group = new Group();
-    }
-
-    void editGroup () {
-        Group group = new Group();
-    }
 }

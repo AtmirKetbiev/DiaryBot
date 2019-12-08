@@ -15,4 +15,7 @@ class Task {
         this.hardDeadline = hardDeadline;
     }
 
+    String getName() {
+        return nameTask;
+    }
 }
