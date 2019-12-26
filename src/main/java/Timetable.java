@@ -1,4 +1,4 @@
-public enum  Timetable {
+public enum Timetable {
     MONDAY("ПОНЕДЕЛЬНИК\n" +
             "_________________\n" +
             "2 пара 10:45-12:15\n Комп графика(л)\n 205C-3\n" +
@@ -54,7 +54,7 @@ public enum  Timetable {
     }
 
     @Override
-    public  String toString(){
+    public String toString() {
         return timetable;
     }
 }

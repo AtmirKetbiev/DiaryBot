@@ -1,24 +1,31 @@
-import java.util.LinkedList;
+import org.telegram.abilitybots.api.db.DBContext;
 
-public class Course {
-    private String name;
-    private LinkedList<Task> task;
+import java.util.Map;
 
-    void addTask () {
-        Task task = new Task("","",null, null,null);
-        this.task.addLast(task);
+class Course {
+    private Map<Integer, String> courseMap;
+
+    Course(DBContext db) {
+        courseMap = db.getMap("Courses");
     }
 
-    String[] getTasks () {
-        String[] tasks = new String[task.size()];
-        int i = -1;
-        for (Task s : task) {
-            tasks[i++] += s.getName();
+    public void add(String s) {
+        courseMap.put(courseMap.size(), s);
+    }
+
+    String[] get() {
+        String[] myArray = new String[courseMap.size()];
+        ;
+        for (int i : courseMap.keySet()) {
+            myArray[i] = (courseMap.get(i));
         }
-        return (tasks);
+        return myArray;
     }
 
-    String getName() {
-        return name;
+    public void remove() {
+        for (int i : courseMap.keySet()) {
+            courseMap.remove(i);
+        }
     }
+
 }

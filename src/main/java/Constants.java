@@ -1,16 +1,18 @@
 import java.util.Calendar;
 
-public interface  Constants {
+public interface Constants {
 
     enum answerKeyboard {
         SELECT("Select");
 
         String select;
+
         answerKeyboard(String select) {
             this.select = select;
         }
+
         @Override
-        public  String toString(){
+        public String toString() {
             return select;
         }
     }
@@ -60,6 +62,7 @@ public interface  Constants {
             "course7",
             "course8",
     };
+
     String[] tasks = new String[]{
             "task1",
             "task2",
@@ -70,6 +73,7 @@ public interface  Constants {
             "task7",
             "task8",
     };
+
     String[] group = new String[]{
             "group1",
             "group2",
@@ -80,6 +84,7 @@ public interface  Constants {
             "group7",
             "group8",
     };
+
     String[] student = new String[]{
             "student1",
             "student2",
@@ -90,6 +95,7 @@ public interface  Constants {
             "student7",
             "student8",
     };
+
     String[] repositories = new String[]{
             "repositories1",
             "repositories2",

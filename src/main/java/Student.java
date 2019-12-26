@@ -1,13 +1,35 @@
-import java.util.LinkedList;
+import org.telegram.abilitybots.api.db.DBContext;
+
+import java.util.Map;
+
+// TODO: Реализовать список студентов
 
 public class Student {
-    private int idStudent;
+
+    private Map<Integer, String> studentMap;
+
+    public Student(DBContext db) {
+        studentMap = db.getMap("Task");
+    }
+
+    public void add(String s) {
+        studentMap.put(studentMap.size(), s);
+    }
+
+    public String get() {
+        return studentMap.values().toString();
+    }
+
+    public void remove() {
+        for (int i : studentMap.keySet()) {
+            studentMap.remove(i);
+        }
+    }
+
+    /*private int idStudent;
     private LinkedList course;
     private LinkedList task;
     private LinkedList repositories;
-
-    public Student() {
-    }
 
     String getCourse() {
         StringBuilder allCourse = new StringBuilder();
@@ -18,7 +40,7 @@ public class Student {
     }
 
     void addCourse (String name) {
-        Course course = new Course();
+        //Course course = new Course();
     }
 
     String getRepositories() {
@@ -32,5 +54,5 @@ public class Student {
     void addRepositories(String name) {
         repositories.addLast(name);
     }
-
+*/
 }
