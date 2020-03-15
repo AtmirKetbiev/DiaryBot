@@ -15,7 +15,7 @@ class Keyboard {
         KeyboardRow keyboardRow = new KeyboardRow();
 
         replyKeyboardMarkup.setSelective(true);
-        //replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
         replyKeyboardMarkup.setOneTimeKeyboard(false);
 
         for (String s : text) {

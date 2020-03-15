@@ -1,58 +1,17 @@
 import org.telegram.abilitybots.api.db.DBContext;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Map;
 
 // TODO: Реализовать список студентов
 
-public class Student {
+public class Student implements Serializable {
+    private static final long serialVersionUID = 4L;
 
-    private Map<Integer, String> studentMap;
+    private String name;                    // Имя студента
+    private Integer idGroup;                // id группы
+    private ArrayList<Integer> idCourses;    // Список с id курсов
 
-    public Student(DBContext db) {
-        studentMap = db.getMap("Task");
-    }
-
-    public void add(String s) {
-        studentMap.put(studentMap.size(), s);
-    }
-
-    public String get() {
-        return studentMap.values().toString();
-    }
-
-    public void remove() {
-        for (int i : studentMap.keySet()) {
-            studentMap.remove(i);
-        }
-    }
-
-    /*private int idStudent;
-    private LinkedList course;
-    private LinkedList task;
-    private LinkedList repositories;
-
-    String getCourse() {
-        StringBuilder allCourse = new StringBuilder();
-        for(Object o : course){
-            allCourse.append(o).append("\n");
-        }
-        return allCourse.toString();
-    }
-
-    void addCourse (String name) {
-        //Course course = new Course();
-    }
-
-    String getRepositories() {
-        StringBuilder allRepositories = new StringBuilder();
-        for(Object o : repositories){
-            allRepositories.append(o).append("\n");
-        }
-        return allRepositories.toString();
-    }
-
-    void addRepositories(String name) {
-        repositories.addLast(name);
-    }
-*/
 }

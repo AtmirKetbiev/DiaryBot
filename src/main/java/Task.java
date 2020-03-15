@@ -1,32 +1,85 @@
 import org.telegram.abilitybots.api.db.DBContext;
 
-import java.util.Map;
+import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-class Task {
+class Task implements Serializable {
+    private static final long serialVersionUID = 3L;
 
-    private Map<Integer, String[]> taskMap;
+    private int idCourse;
+    private String name;
+    private String description;
+    private Date soft;
+    private Date hard;
+    private String comment;
+    private String mark;
 
-    Task(DBContext db) {
-        taskMap = db.getMap("Tasks");
+    public Task() {
     }
 
-    public void add(String course, String s) {
-        taskMap.put(taskMap.size(), new String[]{course, s});
+    public int getIdCourse() {
+        return idCourse;
     }
 
-    String[] get(String course) {
-        String[] myArrayTask = new String[taskMap.size()];
-        for (int i : taskMap.keySet()) {
-            if (taskMap.get(i)[0].equals(course)) {
-                myArrayTask[i] = taskMap.get(i)[1];
-            }
-        }
-        return myArrayTask;
+    public void setIdCourse(int idCourse) {
+        this.idCourse = idCourse;
     }
 
-    public void remove() {
-        for (int i : taskMap.keySet()) {
-            taskMap.remove(i);
-        }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getSoft() {
+        return soft;
+    }
+
+    public void setSoft(String soft) throws ParseException {
+        this.soft = new SimpleDateFormat("dd/MM/yyyy").parse(soft);
+    }
+
+    public Date getHard() {
+        return hard;
+    }
+
+    public void setHard(String hard) throws ParseException {
+        this.hard = new SimpleDateFormat("dd/MM/yyyy").parse(hard);
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getMark() {
+        return mark;
+    }
+
+    public void setMark(String mark) {
+        this.mark = mark;
+    }
+
+    boolean check() {
+        if (name == null)  return false;
+        if (description == null)  return false;
+        if (soft == null)  return false;
+        if (hard == null)  return false;
+        return true;
     }
 }

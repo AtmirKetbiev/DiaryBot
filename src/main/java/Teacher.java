@@ -1,44 +1,43 @@
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Map;
 
 // TODO: Реализовать список преподователей
 
-public class Teacher {
-    private int idTeacher;
-    private LinkedList<Course> course;
-    private LinkedList<String> repositories;
+public class Teacher implements Serializable {
 
-    Teacher(int idTeacher) {
-        this.idTeacher = idTeacher;
+    private String name;                // Имя преподавателя
+    private ArrayList<Integer> courses = new ArrayList<Integer>();  // Список с id курсов
+
+    private static final long serialVersionUID = 2L;
+
+    public String getName() {
+        return name;
     }
 
-    String[] getCourse() {
-        String[] courses = new String[course.size()];
-        int i = -1;
-        for (Course s : course) {
-            //courses[i++] += s.getName();
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ArrayList<Integer> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(ArrayList<Integer> courses) {
+        this.courses = courses;
+    }
+
+    public void addCourses(Integer id) {
+        if (courses == null) {
+            ArrayList<Integer> coue = new ArrayList<Integer>();
+            coue.add(id);
+            this.courses = coue;
+        } else {
+            courses.add(id);
         }
-        return (courses);
     }
 
-    void addCourse(String name) {
-        //Course course = new Course();
-        //this.course.addLast(course);
-    }
-
-    void deleteCourse(String name) {
-
-    }
-
-    String getRepositories() {
-        StringBuilder allRepositories = new StringBuilder();
-        for (Object o : repositories) {
-            allRepositories.append(o).append("\n");
-        }
-        return allRepositories.toString();
-    }
-
-    void addRepositories(String name) {
-        repositories.addLast(name);
-    }
+    //private Map<Integer, String> course;
 
 }

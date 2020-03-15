@@ -2,18 +2,21 @@ import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.util.AbilityExtension;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 
+import java.io.Serializable;
+
 public class Bot extends AbilityBot implements Constants {
 
     public static String flagT;
     public static boolean flag;
     static String user = "";
 
+
     Bot(DefaultBotOptions botOptions) {
         super(BOT_USERNAME, TOKEN, botOptions);
     }
 
     public AbilityExtension ability() {
-        return new MyAbilityExtension(silent, db);
+        return new TeacherAbilityExtension(silent, db);
     }
 
     @Override
