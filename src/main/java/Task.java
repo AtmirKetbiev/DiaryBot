@@ -5,7 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-class Task implements Serializable {
+public class Task implements Serializable {
     private static final long serialVersionUID = 3L;
 
     private int idCourse;
@@ -75,7 +75,7 @@ class Task implements Serializable {
         this.mark = mark;
     }
 
-    boolean check() {
+    public boolean check() {
         if (name == null)  return false;
         if (description == null)  return false;
         if (soft == null)  return false;

@@ -1,15 +1,15 @@
-import org.telegram.abilitybots.api.db.DBContext;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Map;
 
-class Course implements Serializable {
+public class Course implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String name;
     private String description;
     private Long idTeacher;
     private ArrayList<Integer> tasks;
+    private ArrayList<String> group;
 
     public String getName() {
         return name;
@@ -35,16 +35,6 @@ class Course implements Serializable {
         this.idTeacher = idTeacher;
     }
 
-    public void addTask(Integer id) {
-        if (tasks == null) {
-            ArrayList<Integer> coue = new ArrayList<Integer>();
-            coue.add(id);
-            this.tasks = coue;
-        } else {
-            tasks.add(id);
-        }
-    }
-
     public ArrayList<Integer> getIdTasks() {
         return tasks;
     }
@@ -53,17 +43,43 @@ class Course implements Serializable {
         this.tasks = idTasks;
     }
 
-    private static final long serialVersionUID = 1L;
-
-    String[] get(Map<Integer, String> courseMap) {
-        String[] myArray = new String[courseMap.size()];
-        for (int i : courseMap.keySet()) {
-            myArray[i] = (courseMap.get(i));
+    public void addTask(Integer id) {
+        if (tasks == null) {
+            ArrayList<Integer> coue = new ArrayList<>();
+            coue.add(id);
+            this.tasks = coue;
+        } else {
+            tasks.add(id);
         }
-        return myArray;
     }
 
-    boolean check() {
+    public void addTask(ArrayList<Integer> task) {
+        this.tasks = task;
+    }
+
+    public void removeTask(Integer id) {
+        tasks.remove(id);
+    }
+
+    public void addGroup(String str) {
+        if (group == null) {
+            ArrayList<String> coue = new ArrayList<>();
+            coue.add(str);
+            this.group = coue;
+        } else {
+            group.add(str);
+        }
+    }
+
+    public ArrayList<String> getGroup() {
+        return group;
+    }
+
+    public void removeGrop(Integer id) {
+        group.remove(id);
+    }
+
+    public boolean check() {
         if (name == null)  return false;
         if (description == null)  return false;
         //if (idTasks == null)  return false;

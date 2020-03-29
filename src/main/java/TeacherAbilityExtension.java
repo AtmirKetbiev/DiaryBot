@@ -1,9 +1,13 @@
 import org.telegram.abilitybots.api.db.DBContext;
+import org.telegram.abilitybots.api.objects.Ability;
+import org.telegram.abilitybots.api.objects.Locality;
+import org.telegram.abilitybots.api.objects.Privacy;
 import org.telegram.abilitybots.api.objects.Reply;
 import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.abilitybots.api.util.AbilityExtension;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -13,13 +17,14 @@ public class TeacherAbilityExtension implements AbilityExtension {
     private SilentSender silent;
     private DBManager db;
 
-    TeacherAbilityExtension(SilentSender silent, DBContext db) {
+    public TeacherAbilityExtension(SilentSender silent, DBContext db) {
 
         this.silent = silent;
         DBManager ddb = new DBManager(db);
         this.db = ddb;
     }
 
+    /**...............................................................................................................*/
     /**Старт преподавателя*/
     public Reply start() {
         return Reply.of(update -> {
@@ -28,28 +33,56 @@ public class TeacherAbilityExtension implements AbilityExtension {
             teacher.setName("препод");
             db.addTeacher(id, teacher);
             answer = "Выберете: add course";
-            silent.execute(Keyboard.addKeyboard(new String[]{"add course", "view course", "delete course"}, update, answer));
+            silent.execute(Keyboard.addKeyboard(new String[]{"Добавить курс", "Посмотреть курсы", "Изменить профиль", "Помощь"}, update, answer));
         }, update -> update.getMessage().getText().equals("/start"));
     }
 
+    public Reply back() {
+        return Reply.of(update -> {
+            Long id = update.getMessage().getChatId();
+            Status status = db.getUserStatus(id);
+            if (status.getIdTask() == -1 && status.getIdCourse() == -1) {
+                status.setIdCourse(-1);
+                silent.execute(Keyboard.addKeyboard(new String[]{"Добавить курс", "Посмотреть курсы", "Изменить профиль", "Помощь"}, update, answer));
+            }
+            if (status.getIdTask() == -1 && status.getIdCourse() != -1) {
+                status.setIdCourse(-1);
+                db.addUserStatus(id, status);
+                String[] myArray = getCourse(id);
+                answer = "Ваши курсы:";
+                silent.execute(Keyboard.addKeyboard(myArray, update, answer));
+            }
+            if (status.getIdTask() != -1) {
+                status.setIdTask(-1);
+                db.addUserStatus(id, status);
+                String[] myArray = getTask(id);
+                answer = "Ваши задания:";
+                silent.execute(Keyboard.addKeyboard(myArray, update, answer));
+            }
+        }, update -> update.getMessage().getText().equals("Назад"));
+    }
+
+    /**...КУРС........................................................................................................*/
     public Reply course() {
         return Reply.of(update -> {
             Long id = update.getMessage().getChatId();
-
             String text = update.getMessage().getText();
-            silent.send("Вы выбрали курс" + text, id);
             Status status = new Status();
-            int t = db.getIdByNameCourse(text, id);
             status.setIdCourse(db.getIdByNameCourse(text, id));
             db.addUserStatus(id, status);
-
-            answer = "ваши курсы";
-            silent.execute(Keyboard.addKeyboard(new String[]{"add task", "view course", "delete course"}, update, answer));
+            answer = db.getCourse(status.getIdCourse()).getName() + "\n\n" + db.getCourse(status.getIdCourse()).getDescription();
+            silent.execute(Keyboard.addKeyboard(new String[]{"Добавить задание", "Посмотреть задания", "Группы", "Ссылки", "Изменить курс", "Удалить курс"}, update, answer));
         }, update -> Arrays.stream(getCourse(update.getMessage().getChatId())).anyMatch(update.getMessage().getText()::equals));
-
     }
 
-    /**Вывод курсов*/
+    public Reply viewCourse() {
+        return Reply.of(update -> {
+            Long id = update.getMessage().getChatId();
+            String[] myArray = getCourse(id);
+            answer = "Ваши курсы:";
+            silent.execute(Keyboard.addKeyboard(myArray, update, answer));
+        }, update -> update.getMessage().getText().equals("Посмотреть курсы"));
+    }
 
     public String[] getCourse(Long id) {
         Teacher teacher = db.getTeacher(id);
@@ -63,26 +96,14 @@ public class TeacherAbilityExtension implements AbilityExtension {
         return myArray;
     }
 
-    public Reply viewCourse() {
-        return Reply.of(update -> {
-            Long id = update.getMessage().getChatId();
-            String[] myArray = getCourse(id);
-            answer = "Ваши курсы:";
-            silent.execute(Keyboard.addKeyboard(myArray, update, answer));
-        }, update -> update.getMessage().getText().equals("view course"));
-    }
-
-    /**Добавление курса*/
-
     public Reply addCourse() {
         return Reply.of(update -> {
-
             Long id = update.getMessage().getChatId();
             Course course = new Course();
             course.setIdTeacher(id);
             db.setCreateCourse(course);
             silent.send("Введите название", update.getMessage().getChatId());
-        }, update -> update.getMessage().getText().equals("add course"));
+        }, update -> update.getMessage().getText().equals("Добавить курс") || update.getMessage().getText().equals("Изменить курс"));
     }
 
     public Reply addNextCourse() {
@@ -102,7 +123,79 @@ public class TeacherAbilityExtension implements AbilityExtension {
             } else {
                 db.setCreateCourse(course);
             }
-        }, update -> db.getCreateCourse().get(update.getMessage().getChatId()) != null && !update.getMessage().getText().equals("add course"));
+        }, update -> db.getCreateCourse().get(update.getMessage().getChatId()) != null
+                && !update.getMessage().getText().equals("Добавить курс")
+                && !update.getMessage().getText().equals("Изменить курс"));
+    }
+
+    public Reply delCourse() {
+        return Reply.of(update -> {
+            Long id = update.getMessage().getChatId();
+            int idCourse = db.getUserStatus().get(id).getIdCourse();
+            db.removeCourse(idCourse, id);
+            silent.send("Курс удален!", id);
+
+            Status status = db.getUserStatus(id);
+            status.setIdCourse(-1);
+            db.addUserStatus(id, status);
+            String[] myArray = getCourse(id);
+            answer = "Ваши курсы:";
+            silent.execute(Keyboard.addKeyboard(myArray, update, answer));
+        }, update -> update.getMessage().getText().equals("Удалить курс"));
+    }
+
+    /**...ЗАДАНИЯ.....................................................................................................*/
+    public Reply task() {
+        return Reply.of(update -> {
+            Long id = update.getMessage().getChatId();
+            String text = update.getMessage().getText();
+            Status status = db.getUserStatus(id);
+            status.setIdTask(db.getIdByNameTask(text, status.getIdCourse()));
+            db.addUserStatus(id, status);
+            //answer = "Вы выбрали задание" + text;
+            if (status.getIdStudent() != -1) {
+                silent.execute(Keyboard.addKeyboard(new String[]{"Снять отметку", "Изменить оценку", "Добавить комментарий"}, update, answer));
+            } else {
+                answer = db.getTask(status.getIdTask()).getName() + "\n" +
+                        db.getTask(status.getIdTask()).getDescription() + "\n\nSoft dedline\n" +
+                        db.getTask(status.getIdTask()).getSoft() + "\n\nHard dedline\n" +
+                        db.getTask(status.getIdTask()).getHard() + "\n\n";
+                silent.execute(Keyboard.addKeyboard(new String[]{"Изменить задание", "Удалить задание"}, update, answer));
+            }
+        }, update -> Arrays.stream(getTask(update.getMessage().getChatId())).anyMatch(update.getMessage().getText()::equals));
+    }
+
+    public Reply viewTask() {
+        return Reply.of(update -> {
+            Long id = update.getMessage().getChatId();
+            String[] myArray = getTask(id);
+            answer = "Ваши задания:";
+            silent.execute(Keyboard.addKeyboard(myArray, update, answer));
+        }, update -> update.getMessage().getText().equals("Посмотреть задания"));
+    }
+
+    public String[] getTask(Long id) {
+        if (db.getUserStatus().get(id).getIdCourse() == -1) {
+            return new String[0];
+        }
+        Map<Integer, Task> task = db.getTaskMap();
+        Map<Integer, Course> course = db.getCourseMap();
+        Course idCourse = course.get(db.getUserStatus().get(id).getIdCourse());
+        ArrayList<Integer> idTask = idCourse.getIdTasks();
+        int q = 0;
+        String[] myArray;
+        if (idTask != null) {
+            myArray = new String[idTask.size()];
+
+        } else {
+            myArray = new String[0];
+            return myArray;
+        }
+        for (int i : idTask) {
+            myArray[q] = task.get(i).getName();
+            q++;
+        }
+        return myArray;
     }
 
     public Reply addTask() {
@@ -112,7 +205,7 @@ public class TeacherAbilityExtension implements AbilityExtension {
             task.setIdCourse(db.getUserStatus(id).getIdCourse());
             db.setCreateTask(id, task);
             silent.send("Введите название задания", update.getMessage().getChatId());
-        }, update -> update.getMessage().getText().equals("add task"));
+        }, update -> update.getMessage().getText().equals("Добавить задание") || update.getMessage().getText().equals("Изменить задание"));
     }
 
     public Reply addNextTask() {
@@ -141,28 +234,144 @@ public class TeacherAbilityExtension implements AbilityExtension {
             }
             if (task.check()) {
                 db.addTaskMap(task);
-                db.removeCreateCourse(id);
+                db.removeCreateTask(id);
                 silent.send("Спасибо", id);
             } else {
                 db.setCreateTask(id, task);
             }
         }, update ->
-                db.getCreateTask().get(update.getMessage().getChatId()) != null && !update.getMessage().getText().equals("add task"));
+                db.getCreateTask().get(update.getMessage().getChatId()) != null
+                        && !update.getMessage().getText().equals("Добавить задание")
+                        && !update.getMessage().getText().equals("Изменить задание"));
+    }
+
+    public Reply delTask() {
+        return Reply.of(update -> {
+            Long id = update.getMessage().getChatId();
+            Course course = db.getCourse(db.getUserStatus().get(id).getIdCourse());
+            course.removeTask(db.getUserStatus().get(id).getIdTask());
+            db.addCourseMap(course);
+            silent.send("Задание удалено!", id);
+
+            Status status = db.getUserStatus(id);
+            status.setIdTask(-1);
+            db.addUserStatus(id, status);
+            String[] myArray = getTask(id);
+            answer = "Ваши задания:";
+            silent.execute(Keyboard.addKeyboard(myArray, update, answer));
+        }, update -> update.getMessage().getText().equals("Удалить задание"));
     }
 
 
-
-
-    public Reply allDB() {
+    /**...ГРУППЫ......................................................................................................*/
+    public Reply viewGroup() {
         return Reply.of(update -> {
-            Map<Long, Teacher> teacherMap = db.getTeacherMap();
-            Map<Long, Student> studentMap = db.getStudentMap();
-            Map<Integer, Course> courseMap = db.getCourseMap();
-            Map<Integer, Task> taskMap = db.getTaskMap();
+            Long id = update.getMessage().getChatId();
+            String[] myArray = getGroup(id);
+            answer = "Ваши задания:";
+            silent.execute(Keyboard.addKeyboard(myArray, update, answer));
+        }, update -> update.getMessage().getText().equals("Группы"));
+    }
 
-            Map<Long, Student> createStudent = db.getCreateStudent();
-            Map<Long, Course> createCourse = db.getCreateCourse();
-            Map<Long, Task> createTask = db.getCreateTask();
+    public String[] getGroup(Long id) {
+        Teacher teacher = db.getTeacher(id);
+        int idCourse = db.getUserStatus().get(id).getIdCourse();
+        Course course = db.getCourse(idCourse);
+        int q = 0;
+        String[] myArray = course.getGroup().toArray(new String[0]);
+        return myArray;
+    }
+
+    public Ability addGroupe() {
+        return Ability
+                .builder()
+                .name("addGroupe")
+                .locality(Locality.ALL)
+                .privacy(Privacy.PUBLIC)
+                .input(1)
+                .action(update -> {
+                    Long id = update.chatId();
+                    int idCourse = db.getUserStatus().get(id).getIdCourse();
+                    Course course = db.getCourse(idCourse);
+                    course.addGroup(update.firstArg());
+                    db.addCourseMap(course);
+                    silent.send(("Группа добавлена"), update.chatId());
+                })
+                .build();
+    }
+
+    public Reply groups() {
+        return Reply.of(update -> {
+            Long id = update.getMessage().getChatId();
+            Status status = db.getUserStatus(id);
+            status.setIdGroup(db.getIdByNameGroup(update.getMessage().getText()));
+            db.addUserStatus(id, status);
+            answer = "Группа " + update.getMessage().getText();
+            silent.execute(Keyboard.addKeyboard(new String[]{"Статистика", "Участники"}, update, answer));
+        }, update -> Arrays.stream(getGroup(update.getMessage().getChatId())).anyMatch(update.getMessage().getText()::equals));
+    }
+
+
+    /**...Студенты.....................................................................................................*/
+    public Reply student() {
+        return Reply.of(update -> {
+            Long id = update.getMessage().getChatId();
+            String text = update.getMessage().getText();
+            Status status = db.getUserStatus(id);
+            status.setIdTask(db.getIdByNameTask(text, status.getIdCourse()));
+            db.addUserStatus(id, status);
+            //answer = "Вы выбрали задание" + text;
+            answer = db.getTask(status.getIdTask()).getName() + "\n" +
+                    db.getTask(status.getIdTask()).getDescription() + "\n\nSoft dedline\n" +
+                    db.getTask(status.getIdTask()).getSoft() + "\n\nHard dedline\n" +
+                    db.getTask(status.getIdTask()).getHard() + "\n\n";
+            silent.execute(Keyboard.addKeyboard(new String[]{"Изменить задание", "Удалить задание"}, update, answer));
+        }, update -> Arrays.stream(getStudent(update.getMessage().getChatId())).anyMatch(update.getMessage().getText()::equals));
+    }
+
+    public Reply viewStudent() {
+        return Reply.of(update -> {
+            Long id = update.getMessage().getChatId();
+            String[] myArray = getStudent(id);
+            answer = "Студенты:";
+            silent.execute(Keyboard.addKeyboard(myArray, update, answer));
+        }, update -> update.getMessage().getText().equals("Участники"));
+    }
+
+    public String[] getStudent(Long id) {
+        Group group = db.getGroup(db.getUserStatus().get(id).getIdGroup());
+        Student student = new Student();
+        Map<Long, Student> studentMap = db.getStudentMap();
+        String array = null;
+        if (db.getUserStatus().get(id).getIdCourse() != -1 && db.getUserStatus().get(id).getIdGroup() != -1) {
+
+            for (Long idStudent : studentMap.keySet()) {
+                if (studentMap.get(idStudent).getGroup().equals(group.getName())) {
+                    array =+ idStudent + " ";
+                }
+            }
+        }
+        String[] myArray = new String[array.split(" ").length];
+        int q = 0;
+        for (String str : array.split(" ")) {
+            myArray[q] = studentMap.get(Long.valueOf(str)).getName();
+            q++;
+        }
+        return myArray;
+    }
+
+
+    /**...РАЗНОЕ......................................................................................................*/
+/*    public Reply allDB() {
+        return Reply.of(update -> {
+            Map<Long, ru.bot.diary.objects.Teacher> teacherMap = db.getTeacherMap();
+            Map<Long, ru.bot.diary.objects.Student> studentMap = db.getStudentMap();
+            Map<Integer, ru.bot.diary.objects.Course> courseMap = db.getCourseMap();
+            Map<Integer, ru.bot.diary.objects.Task> taskMap = db.getTaskMap();
+
+            Map<Long, ru.bot.diary.objects.Student> createStudent = db.getCreateStudent();
+            Map<Long, ru.bot.diary.objects.Course> createCourse = db.getCreateCourse();
+            Map<Long, ru.bot.diary.objects.Task> createTask = db.getCreateTask();
 
             silent.send("Стоп", update.getMessage().getChatId());
         }, update -> update.getMessage().getText().equals("q"));
@@ -176,9 +385,14 @@ public class TeacherAbilityExtension implements AbilityExtension {
             db.deleteStudent();
             db.deleteCreate();
             db.deleteStatus();
-            silent.send("КУрсы удалены", update.getMessage().getChatId());
+            silent.send("Все удалено", update.getMessage().getChatId());
+            start();
         }, update -> update.getMessage().getText().equals("del"));
     }
 
-
+    public Reply ssss() {
+        return Reply.of(update -> {
+            db.a();
+        }, update -> update.getMessage().getText().equals("s"));
+    }*/
 }

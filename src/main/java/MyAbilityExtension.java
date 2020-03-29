@@ -3,9 +3,6 @@ import org.telegram.abilitybots.api.objects.*;
 import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.abilitybots.api.util.AbilityExtension;
 
-import java.util.Arrays;
-import java.util.Map;
-
 public class MyAbilityExtension implements AbilityExtension {
     private SilentSender silent;
     private DBContext db;
@@ -27,23 +24,23 @@ public class MyAbilityExtension implements AbilityExtension {
 
 
 //    public Reply keyboard() {
-//        Course course = new Course(db);
-//        Task task = new Task(db);
+//        ru.bot.diary.objects.Course course = new ru.bot.diary.objects.Course(db);
+//        ru.bot.diary.objects.Task task = new ru.bot.diary.objects.Task(db);
 //        return Reply.of(update -> {
 //            Bot.flagT = "";
 //            switch (update.getMessage().getText()) {
 //                case ("/start"):
-//                    silent.execute(Keyboard.addKeyboard(new String[]{"Teacher", "Student"}, update, Constants.answerKeyboard.SELECT.toString()));
+//                    silent.execute(Keyboard.addKeyboard(new String[]{"ru.bot.diary.objects.Teacher", "ru.bot.diary.objects.Student"}, update, Constants.answerKeyboard.SELECT.toString()));
 //                    break;
 //
 //                //**Выбор пользователя*//*
-//                case ("Teacher"):
-//                    Bot.user = "Teacher";
-//                    //silent.send("Teacher:", update.getMessage().getChatId());
+//                case ("ru.bot.diary.objects.Teacher"):
+//                    Bot.user = "ru.bot.diary.objects.Teacher";
+//                    //silent.send("ru.bot.diary.objects.Teacher:", update.getMessage().getChatId());
 //                    silent.execute(Keyboard.addKeyboard(new String[]{"add course", "view course", "delete course"}, update, answer));
 //                    break;
-//                case ("Student"):
-//                    Bot.user = "Student";
+//                case ("ru.bot.diary.objects.Student"):
+//                    Bot.user = "ru.bot.diary.objects.Student";
 //                    answer = "Выберете:";
 //                    silent.execute(Keyboard.addKeyboard(new String[]{"view course", "timetable"}, update, answer));
 //                    break;
@@ -90,31 +87,31 @@ public class MyAbilityExtension implements AbilityExtension {
 //
 //                //**Возврат*//*
 //                case ("back"):
-//                    if (Bot.user.equals("Teacher")) {
+//                    if (Bot.user.equals("ru.bot.diary.objects.Teacher")) {
 //                        silent.execute(Keyboard.addKeyboard(new String[]{"add course", "view course", "delete course"}, update, "select"));
-//                    } else if (Bot.user.equals("Student")) {
+//                    } else if (Bot.user.equals("ru.bot.diary.objects.Student")) {
 //                        silent.execute(Keyboard.addKeyboard(new String[]{"view course", "view tasks", "timetable"}, update, "select"));
 //                    } else {
-//                        silent.execute(Keyboard.addKeyboard(new String[]{"Teacher ", "Student"}, update, answer));
+//                        silent.execute(Keyboard.addKeyboard(new String[]{"ru.bot.diary.objects.Teacher ", "ru.bot.diary.objects.Student"}, update, answer));
 //                    }
 //                    break;
 //                default:
-//                    silent.execute(Keyboard.addKeyboard(new String[]{"Teacher ", "Student"}, update, answer));
+//                    silent.execute(Keyboard.addKeyboard(new String[]{"ru.bot.diary.objects.Teacher ", "ru.bot.diary.objects.Student"}, update, answer));
 //            }
 //        }, update -> Arrays.asList(Constants.keyboardWords).contains(update.getMessage().getText()));
 //    }
 
     /*public Reply viewCourse() {
         Bot.flagT = "";
-        Course course = new Course(db);
+        ru.bot.diary.objects.Course course = new ru.bot.diary.objects.Course(db);
         return Reply.of(update -> {
             Bot.flagT = "";
             flagCourse = update.getMessage().getText();
-            if (Bot.user.equals("Teacher")) {
+            if (Bot.user.equals("ru.bot.diary.objects.Teacher")) {
 
                 silent.execute(Keyboard.addKeyboard(new String[]{"add task", "view tasks", "delete course"}, update, answer));
-            } else if (Bot.user.equals("Student")){
-                Task task = new Task(db);
+            } else if (Bot.user.equals("ru.bot.diary.objects.Student")){
+                ru.bot.diary.objects.Task task = new ru.bot.diary.objects.Task(db);
                 answer = "Список заданий:";
                 silent.execute(Keyboard.addKeyboard(task.get(flagCourse), update, answer));
             }
@@ -128,7 +125,7 @@ public class MyAbilityExtension implements AbilityExtension {
 //        return Reply.of(update -> {
 //            if (Bot.flagT.equals("addCourse")) {
 //                String text = update.getMessage().getText();
-//                Course course = new Course(db);
+//                ru.bot.diary.objects.Course course = new ru.bot.diary.objects.Course(db);
 //                course.add(text);
 //                silent.send("Добавлено", update.getMessage().getChatId());
 //            }
@@ -140,7 +137,7 @@ public class MyAbilityExtension implements AbilityExtension {
 //        return Reply.of(update -> {
 //            if (Bot.flagT.equals("addTask")) {
 //                String text = update.getMessage().getText();
-//                Task task = new Task(db);
+//                ru.bot.diary.objects.Task task = new ru.bot.diary.objects.Task(db);
 //                task.add(flagCourse, text);
 //                silent.send("Добавлено", update.getMessage().getChatId());
 //            }
@@ -153,9 +150,9 @@ public class MyAbilityExtension implements AbilityExtension {
      */
     /*public Reply delete() {
         return Reply.of(update -> {
-            Task task = new Task(db);
+            ru.bot.diary.objects.Task task = new ru.bot.diary.objects.Task(db);
             task.remove();
-            Course course = new Course(db);
+            ru.bot.diary.objects.Course course = new ru.bot.diary.objects.Course(db);
             course.remove();
             silent.send("delete All", update.getMessage().getChatId());
         }, update -> update.getMessage().getText().equals("/del"));

@@ -23,7 +23,7 @@ class Keyboard {
             keyboard.add(keyboardRow);
             keyboardRow = new KeyboardRow();
         }
-        keyboardRow.add("back");
+        keyboardRow.add("Назад");
         keyboard.add(keyboardRow);
 
         replyKeyboardMarkup.setKeyboard(keyboard);

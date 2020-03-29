@@ -1,12 +1,26 @@
-import org.telegram.abilitybots.api.db.DBContext;
-
-import java.util.Map;
-
-// TODO: Реализовать список групп
-
 public class Group {
 
     private String kafedra;
     private String name;
 
+    public void setGroup(String kafedra, String name) {
+        this.kafedra =  kafedra;
+        this.name = name;
+    }
+
+    public String getKafedra() {
+        return kafedra;
+    }
+
+    public void setKafedra(String kafedra) {
+        this.kafedra = kafedra;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

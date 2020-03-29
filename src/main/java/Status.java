@@ -8,6 +8,13 @@ public class Status implements Serializable {
     private int idGroup;
     private int idStudent;
 
+    public Status() {
+        this.idCourse = -1;
+        this.idTask = -1;
+        this.idGroup = -1;
+        this.idStudent = -1;
+    }
+
     public int getIdCourse() {
         return idCourse;
     }
