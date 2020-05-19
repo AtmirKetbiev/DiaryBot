@@ -25,7 +25,7 @@ public interface Constants {
     //reserved buttons
     String[] keyboardWords = new String[]{
             "/start",
-            "ru.bot.diary.objects.Teacher",
+            "ru.bot.diary.objects.ru.bot.objects.Teacher",
             "add course",
             "view course",
             "edit course",
@@ -35,7 +35,7 @@ public interface Constants {
             "edit task",
             "delete task",
             "view group",
-            "ru.bot.diary.objects.Student",
+            "ru.bot.diary.objects.ru.bot.objects.Student",
             "repositories",
             "timetable",
             "today",

@@ -1,3 +1,5 @@
+package ru.bot.objects;
+
 import java.util.ArrayList;
 
 public class Progress {

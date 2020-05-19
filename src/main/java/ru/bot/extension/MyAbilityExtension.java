@@ -1,3 +1,5 @@
+package ru.bot.extension;
+
 import org.telegram.abilitybots.api.db.DBContext;
 import org.telegram.abilitybots.api.objects.*;
 import org.telegram.abilitybots.api.sender.SilentSender;
@@ -24,25 +26,25 @@ public class MyAbilityExtension implements AbilityExtension {
 
 
 //    public Reply keyboard() {
-//        ru.bot.diary.objects.Course course = new ru.bot.diary.objects.Course(db);
-//        ru.bot.diary.objects.Task task = new ru.bot.diary.objects.Task(db);
+//        ru.bot.diary.objects.ru.bot.objects.Course course = new ru.bot.diary.objects.ru.bot.objects.Course(db);
+//        ru.bot.diary.objects.ru.bot.objects.Task task = new ru.bot.diary.objects.ru.bot.objects.Task(db);
 //        return Reply.of(update -> {
 //            Bot.flagT = "";
 //            switch (update.getMessage().getText()) {
 //                case ("/start"):
-//                    silent.execute(Keyboard.addKeyboard(new String[]{"ru.bot.diary.objects.Teacher", "ru.bot.diary.objects.Student"}, update, Constants.answerKeyboard.SELECT.toString()));
+//                    silent.execute(ru.bot.extension.Keyboard.addKeyboard(new String[]{"ru.bot.diary.objects.ru.bot.objects.Teacher", "ru.bot.diary.objects.ru.bot.objects.Student"}, update, Constants.answerKeyboard.SELECT.toString()));
 //                    break;
 //
 //                //**Выбор пользователя*//*
-//                case ("ru.bot.diary.objects.Teacher"):
-//                    Bot.user = "ru.bot.diary.objects.Teacher";
-//                    //silent.send("ru.bot.diary.objects.Teacher:", update.getMessage().getChatId());
-//                    silent.execute(Keyboard.addKeyboard(new String[]{"add course", "view course", "delete course"}, update, answer));
+//                case ("ru.bot.diary.objects.ru.bot.objects.Teacher"):
+//                    Bot.user = "ru.bot.diary.objects.ru.bot.objects.Teacher";
+//                    //silent.send("ru.bot.diary.objects.ru.bot.objects.Teacher:", update.getMessage().getChatId());
+//                    silent.execute(ru.bot.extension.Keyboard.addKeyboard(new String[]{"add course", "view course", "delete course"}, update, answer));
 //                    break;
-//                case ("ru.bot.diary.objects.Student"):
-//                    Bot.user = "ru.bot.diary.objects.Student";
+//                case ("ru.bot.diary.objects.ru.bot.objects.Student"):
+//                    Bot.user = "ru.bot.diary.objects.ru.bot.objects.Student";
 //                    answer = "Выберете:";
-//                    silent.execute(Keyboard.addKeyboard(new String[]{"view course", "timetable"}, update, answer));
+//                    silent.execute(ru.bot.extension.Keyboard.addKeyboard(new String[]{"view course", "timetable"}, update, answer));
 //                    break;
 //
 //                //**Редактирование курса преподователем*//*
@@ -52,7 +54,7 @@ public class MyAbilityExtension implements AbilityExtension {
 //                    break;
 //                case ("view course"):
 //                    answer = "Ваши курсы:";
-//                    silent.execute(Keyboard.addKeyboard(course.get(), update, answer));
+//                    silent.execute(ru.bot.extension.Keyboard.addKeyboard(course.get(), update, answer));
 //                    break;
 //                case ("delete course"):
 //                    course.remove();
@@ -67,53 +69,53 @@ public class MyAbilityExtension implements AbilityExtension {
 //                case ("view tasks"):
 //                    answer = "Список заданий:";
 //
-//                    silent.execute(Keyboard.addKeyboard(task.get(flagCourse), update, answer));
+//                    silent.execute(ru.bot.extension.Keyboard.addKeyboard(task.get(flagCourse), update, answer));
 //                    silent.send(flagCourse, update.getMessage().getChatId());
 //                    break;
 //
 //                *//**Просмотр расписания студентом*//*
 //                case ("timetable"):
-//                    silent.execute(Keyboard.addKeyboard(new String[]{"Today ", "Tomorrow", "For a week", "back"}, update, answer));
+//                    silent.execute(ru.bot.extension.Keyboard.addKeyboard(new String[]{"Today ", "Tomorrow", "For a week", "back"}, update, answer));
 //                    break;
 //                case ("Today"):
-//                    silent.send(Timetable.timetable(Constants.day), update.getMessage().getChatId());
+//                    silent.send(ru.bot.extension.Timetable.timetable(Constants.day), update.getMessage().getChatId());
 //                    break;
 //                case ("Tomorrow"):
-//                    silent.send(Timetable.timetable(Constants.day + 1), update.getMessage().getChatId());
+//                    silent.send(ru.bot.extension.Timetable.timetable(Constants.day + 1), update.getMessage().getChatId());
 //                    break;
 //                case ("For a week"):
-//                    silent.send(Timetable.timetable(0), update.getMessage().getChatId());
+//                    silent.send(ru.bot.extension.Timetable.timetable(0), update.getMessage().getChatId());
 //                    break;
 //
 //                //**Возврат*//*
 //                case ("back"):
-//                    if (Bot.user.equals("ru.bot.diary.objects.Teacher")) {
-//                        silent.execute(Keyboard.addKeyboard(new String[]{"add course", "view course", "delete course"}, update, "select"));
-//                    } else if (Bot.user.equals("ru.bot.diary.objects.Student")) {
-//                        silent.execute(Keyboard.addKeyboard(new String[]{"view course", "view tasks", "timetable"}, update, "select"));
+//                    if (Bot.user.equals("ru.bot.diary.objects.ru.bot.objects.Teacher")) {
+//                        silent.execute(ru.bot.extension.Keyboard.addKeyboard(new String[]{"add course", "view course", "delete course"}, update, "select"));
+//                    } else if (Bot.user.equals("ru.bot.diary.objects.ru.bot.objects.Student")) {
+//                        silent.execute(ru.bot.extension.Keyboard.addKeyboard(new String[]{"view course", "view tasks", "timetable"}, update, "select"));
 //                    } else {
-//                        silent.execute(Keyboard.addKeyboard(new String[]{"ru.bot.diary.objects.Teacher ", "ru.bot.diary.objects.Student"}, update, answer));
+//                        silent.execute(ru.bot.extension.Keyboard.addKeyboard(new String[]{"ru.bot.diary.objects.ru.bot.objects.Teacher ", "ru.bot.diary.objects.ru.bot.objects.Student"}, update, answer));
 //                    }
 //                    break;
 //                default:
-//                    silent.execute(Keyboard.addKeyboard(new String[]{"ru.bot.diary.objects.Teacher ", "ru.bot.diary.objects.Student"}, update, answer));
+//                    silent.execute(ru.bot.extension.Keyboard.addKeyboard(new String[]{"ru.bot.diary.objects.ru.bot.objects.Teacher ", "ru.bot.diary.objects.ru.bot.objects.Student"}, update, answer));
 //            }
 //        }, update -> Arrays.asList(Constants.keyboardWords).contains(update.getMessage().getText()));
 //    }
 
     /*public Reply viewCourse() {
         Bot.flagT = "";
-        ru.bot.diary.objects.Course course = new ru.bot.diary.objects.Course(db);
+        ru.bot.diary.objects.ru.bot.objects.Course course = new ru.bot.diary.objects.ru.bot.objects.Course(db);
         return Reply.of(update -> {
             Bot.flagT = "";
             flagCourse = update.getMessage().getText();
-            if (Bot.user.equals("ru.bot.diary.objects.Teacher")) {
+            if (Bot.user.equals("ru.bot.diary.objects.ru.bot.objects.Teacher")) {
 
-                silent.execute(Keyboard.addKeyboard(new String[]{"add task", "view tasks", "delete course"}, update, answer));
-            } else if (Bot.user.equals("ru.bot.diary.objects.Student")){
-                ru.bot.diary.objects.Task task = new ru.bot.diary.objects.Task(db);
+                silent.execute(ru.bot.extension.Keyboard.addKeyboard(new String[]{"add task", "view tasks", "delete course"}, update, answer));
+            } else if (Bot.user.equals("ru.bot.diary.objects.ru.bot.objects.Student")){
+                ru.bot.diary.objects.ru.bot.objects.Task task = new ru.bot.diary.objects.ru.bot.objects.Task(db);
                 answer = "Список заданий:";
-                silent.execute(Keyboard.addKeyboard(task.get(flagCourse), update, answer));
+                silent.execute(ru.bot.extension.Keyboard.addKeyboard(task.get(flagCourse), update, answer));
             }
         }, update -> Arrays.toString(course.get()).contains(update.getMessage().getText()));
     }*/
@@ -125,7 +127,7 @@ public class MyAbilityExtension implements AbilityExtension {
 //        return Reply.of(update -> {
 //            if (Bot.flagT.equals("addCourse")) {
 //                String text = update.getMessage().getText();
-//                ru.bot.diary.objects.Course course = new ru.bot.diary.objects.Course(db);
+//                ru.bot.diary.objects.ru.bot.objects.Course course = new ru.bot.diary.objects.ru.bot.objects.Course(db);
 //                course.add(text);
 //                silent.send("Добавлено", update.getMessage().getChatId());
 //            }
@@ -137,7 +139,7 @@ public class MyAbilityExtension implements AbilityExtension {
 //        return Reply.of(update -> {
 //            if (Bot.flagT.equals("addTask")) {
 //                String text = update.getMessage().getText();
-//                ru.bot.diary.objects.Task task = new ru.bot.diary.objects.Task(db);
+//                ru.bot.diary.objects.ru.bot.objects.Task task = new ru.bot.diary.objects.ru.bot.objects.Task(db);
 //                task.add(flagCourse, text);
 //                silent.send("Добавлено", update.getMessage().getChatId());
 //            }
@@ -150,9 +152,9 @@ public class MyAbilityExtension implements AbilityExtension {
      */
     /*public Reply delete() {
         return Reply.of(update -> {
-            ru.bot.diary.objects.Task task = new ru.bot.diary.objects.Task(db);
+            ru.bot.diary.objects.ru.bot.objects.Task task = new ru.bot.diary.objects.ru.bot.objects.Task(db);
             task.remove();
-            ru.bot.diary.objects.Course course = new ru.bot.diary.objects.Course(db);
+            ru.bot.diary.objects.ru.bot.objects.Course course = new ru.bot.diary.objects.ru.bot.objects.Course(db);
             course.remove();
             silent.send("delete All", update.getMessage().getChatId());
         }, update -> update.getMessage().getText().equals("/del"));

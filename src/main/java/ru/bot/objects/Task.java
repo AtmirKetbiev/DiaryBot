@@ -1,3 +1,5 @@
+package ru.bot.objects;
+
 import org.telegram.abilitybots.api.db.DBContext;
 
 import java.io.Serializable;
@@ -6,24 +8,22 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Task implements Serializable {
-    private static final long serialVersionUID = 3L;
+    //private static final long serialVersionUID = 3L;
 
-    private int idCourse;
+    private String idCourse;
     private String name;
     private String description;
     private Date soft;
     private Date hard;
-    private String comment;
-    private String mark;
 
     public Task() {
     }
 
-    public int getIdCourse() {
+    public String getIdCourse() {
         return idCourse;
     }
 
-    public void setIdCourse(int idCourse) {
+    public void setIdCourse(String idCourse) {
         this.idCourse = idCourse;
     }
 
@@ -57,22 +57,6 @@ public class Task implements Serializable {
 
     public void setHard(String hard) throws ParseException {
         this.hard = new SimpleDateFormat("dd/MM/yyyy").parse(hard);
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public String getMark() {
-        return mark;
-    }
-
-    public void setMark(String mark) {
-        this.mark = mark;
     }
 
     public boolean check() {

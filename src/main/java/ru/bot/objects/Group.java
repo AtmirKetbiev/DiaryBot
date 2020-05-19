@@ -1,9 +1,11 @@
+package ru.bot.objects;
+
 public class Group {
 
     private String kafedra;
     private String name;
 
-    public void setGroup(String kafedra, String name) {
+    public Group(String kafedra, String name) {
         this.kafedra =  kafedra;
         this.name = name;
     }

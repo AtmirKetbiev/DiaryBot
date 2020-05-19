@@ -1,3 +1,6 @@
+package ru.bot.objects;
+
+//import com.sun.javaws.progress.Progress;
 import org.telegram.abilitybots.api.db.DBContext;
 
 import java.io.Serializable;
@@ -5,10 +8,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
 
-// TODO: Реализовать список студентов
 
 public class Student implements Serializable {
-    private static final long serialVersionUID = 4L;
+    //private static final long serialVersionUID = 4L;
 
     private String stat;
 

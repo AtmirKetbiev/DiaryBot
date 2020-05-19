@@ -1,3 +1,5 @@
+package ru.bot.extension;
+
 public enum Timetable {
     MONDAY("онмедекэмхй\n" +
             "_________________\n" +

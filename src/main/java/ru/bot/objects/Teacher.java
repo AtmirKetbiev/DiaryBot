@@ -1,14 +1,15 @@
+package ru.bot.objects;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
-// TODO: Реализовать список преподователей
 
 public class Teacher implements Serializable {
 
     private String name;
-    private ArrayList<Integer> courses = new ArrayList<>();
+    private ArrayList<String> courses = new ArrayList<>();
 
-    private static final long serialVersionUID = 2L;
+    //private static final long serialVersionUID = 2L;
 
     public String getName() {
         return name;
@@ -18,17 +19,17 @@ public class Teacher implements Serializable {
         this.name = name;
     }
 
-    public ArrayList<Integer> getCourses() {
+    public ArrayList<String> getCourses() {
         return courses;
     }
 
-    public void setCourses(ArrayList<Integer> courses) {
+    public void setCourses(ArrayList<String> courses) {
         this.courses = courses;
     }
 
-    public void addCourses(Integer id) {
+    public void addCourses(String id) {
         if (courses == null) {
-            ArrayList<Integer> coue = new ArrayList<>();
+            ArrayList<String> coue = new ArrayList<>();
             coue.add(id);
             this.courses = coue;
         } else {
@@ -36,7 +37,7 @@ public class Teacher implements Serializable {
         }
     }
 
-    public void removeCourse(int id) {
+    public void removeCourse(String id) {
         courses.remove(courses.indexOf(id));
     }
 

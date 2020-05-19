@@ -1,10 +1,10 @@
+package ru.bot.extension;
+
 import org.telegram.abilitybots.api.db.DBContext;
 import org.telegram.abilitybots.api.util.AbilityExtension;
+import ru.bot.objects.*;
 
-import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.Map;
-import java.util.Scanner;
 
 public class DBManager implements AbilityExtension {
 
@@ -22,6 +22,7 @@ public class DBManager implements AbilityExtension {
     private Map<Long, Student> createStudent;
     private Map<Long, Course> createCourse;
     private Map<Long, Task> createTask;
+    private Map<Long, Integer> createAddGroupInCourse;
 
     public DBManager(DBContext db) {
         this.db = db;
@@ -32,6 +33,8 @@ public class DBManager implements AbilityExtension {
 
         this.userStatus = db.getMap("userStatus");
 
+        this.groups =  db.getMap("ru.bot.objects.Group");;
+
         this.createTeacher = db.getMap("createTeacher");
         this.createStudent = db.getMap("createStudent");
         this.createCourse = db.getMap("createCourse");
@@ -40,7 +43,7 @@ public class DBManager implements AbilityExtension {
 
 
     /** Статус юзера..................................................................................................*/
-    public void statusNull(Long id) {
+    /*   public void statusNull(Long id) {
         this.userStatus.put(id, new Status());
     }
 
@@ -58,11 +61,11 @@ public class DBManager implements AbilityExtension {
 
     public void removeUserStatus(Long id) {
         this.userStatus.remove(id);
-    }
+    }*/
 
 
     /** Курсы.........................................................................................................*/
-    public Map<Integer, Course> getCourseMap() {
+    /*public Map<Integer, Course> getCourseMap() {
         return courseMap;
     }
 
@@ -79,7 +82,7 @@ public class DBManager implements AbilityExtension {
         int idCourse = userStatus.get(course.getIdTeacher()).getIdCourse();
         if (idCourse != -1) {
             if (userStatus.get(course.getIdTeacher()).getIdTask() == -1) {
-                course.addTask(this.courseMap.get(idCourse).getIdTasks());
+                course.setIdTasks(this.courseMap.get(idCourse).getIdTasks());
             }
             this.courseMap.put(idCourse, course);
         } else {
@@ -102,11 +105,11 @@ public class DBManager implements AbilityExtension {
             }
         }
         return 0;
-    }
+    }*/
 
 
     /** Задания ......................................................................................................*/
-    public Map<Integer, Task> getTaskMap() {
+    /*public Map<Integer, Task> getTaskMap() {
         return taskMap;
     }
 
@@ -124,7 +127,7 @@ public class DBManager implements AbilityExtension {
             this.taskMap.put(userStatus.get(course.getIdTeacher()).getIdTask(), task);
         } else {
             this.taskMap.put(taskMap.size(), task);
-            course.addTask(taskMap.size()-1);
+            course.setIdTasks(taskMap.size()-1);
             this.courseMap.put(task.getIdCourse(), course);
         }
     }
@@ -137,10 +140,10 @@ public class DBManager implements AbilityExtension {
         }
         return 0;
     }
-
+*/
 
     /** Преподы .....................................................................................................*/
-    public void addTeacher(Long id, Teacher teacher) {
+    /*public void addTeacher(Long id, Teacher teacher) {
         this.userStatus.put(id, new Status());
         if (teacherMap.get(id) == null) {
             this.teacherMap.put(id, teacher);
@@ -153,7 +156,7 @@ public class DBManager implements AbilityExtension {
 
     public Map<Long, Teacher> getTeacherMap() {
         return teacherMap;
-    }
+    }*/
 
 
     /** Студенты .....................................................................................................*/
@@ -210,16 +213,18 @@ public class DBManager implements AbilityExtension {
 
 
     /** Группы........................................................................................................*/
-    private Map<Integer,Group> group() throws Exception {
-        FileReader fileReader = new FileReader("group.txt");
-        Scanner scanner = new Scanner(fileReader);
-        Group group = new Group();
-        while (scanner.hasNextLine()) {
-            group.setGroup(scanner.nextLine().split(".")[0], scanner.nextLine().split(".")[1]);
-            groups.put(groups.size(), group);
-        }
-        fileReader.close();
-        return groups;
+    public Map<Integer, Group> group() {
+        return this.groups;
+    }
+
+    public void putGroup() {
+        Group g = new Group("Информационные технологии", "1-ПМИ-4");
+        /*g.setKafedra("Информационные технологии");
+        g.setName("1-ПМИ-4");*/
+        this.groups.put(groups.size(), g);
+        g.setKafedra("Информационные технологии");
+        g.setName("2-ПМИ-4");
+        this.groups.put(groups.size(), g);
     }
 
     public Group getGroup(long id) {
@@ -234,6 +239,22 @@ public class DBManager implements AbilityExtension {
         }
         return -1;
     }
+
+
+    /** Добавление группы к курсу.....................................................................................*/
+
+    public Map<Long, Integer> getCreateAddGroupInCourse() {
+        return createAddGroupInCourse;
+    }
+
+    public void removeCreateAddGroupInCourse(Long id) {
+        this.createAddGroupInCourse.remove(id);
+    }
+
+    public void putCreateAddGroupInCourse(Long id, int idCourse) {
+        this.createAddGroupInCourse.put(id, idCourse);
+    }
+
 
 //    public ArrayList<Long> getStudentByNameGroup(String name, Long id) {
 //    }

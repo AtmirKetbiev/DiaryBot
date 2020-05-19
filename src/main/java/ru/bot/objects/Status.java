@@ -1,33 +1,35 @@
+package ru.bot.objects;
+
 import java.io.Serializable;
 
 public class Status implements Serializable {
-    private static final long serialVersionUID = 5L;
+    //private static final long serialVersionUID = 5L;
 
-    private int idCourse;
-    private int idTask;
+    private String idCourse;
+    private String idTask;
     private int idGroup;
     private int idStudent;
 
     public Status() {
-        this.idCourse = -1;
-        this.idTask = -1;
+        this.idCourse = null;
+        this.idTask = null;
         this.idGroup = -1;
         this.idStudent = -1;
     }
 
-    public int getIdCourse() {
+    public String getIdCourse() {
         return idCourse;
     }
 
-    public void setIdCourse(int idCourse) {
+    public void setIdCourse(String idCourse) {
         this.idCourse = idCourse;
     }
 
-    public int getIdTask() {
+    public String getIdTask() {
         return idTask;
     }
 
-    public void setIdTask(int idTask) {
+    public void setIdTask(String idTask) {
         this.idTask = idTask;
     }
 

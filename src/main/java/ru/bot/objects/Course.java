@@ -1,15 +1,18 @@
+package ru.bot.objects;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Course implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    //private static final long serialVersionUID = 1L;
 
     private String name;
     private String description;
     private Long idTeacher;
-    private ArrayList<Integer> tasks;
-    private ArrayList<String> group;
+    private List<String> tasks;
+    private List<String> group;
 
     public String getName() {
         return name;
@@ -35,17 +38,13 @@ public class Course implements Serializable {
         this.idTeacher = idTeacher;
     }
 
-    public ArrayList<Integer> getIdTasks() {
+    public List<String> getIdTasks() {
         return tasks;
     }
 
-    public void setIdTasks(ArrayList<Integer> idTasks) {
-        this.tasks = idTasks;
-    }
-
-    public void addTask(Integer id) {
+    public void setIdTasks(String id) {
         if (tasks == null) {
-            ArrayList<Integer> coue = new ArrayList<>();
+            ArrayList<String> coue = new ArrayList<>();
             coue.add(id);
             this.tasks = coue;
         } else {
@@ -53,7 +52,7 @@ public class Course implements Serializable {
         }
     }
 
-    public void addTask(ArrayList<Integer> task) {
+    public void setIdTasks(List<String> task) {
         this.tasks = task;
     }
 
@@ -63,15 +62,15 @@ public class Course implements Serializable {
 
     public void addGroup(String str) {
         if (group == null) {
-            ArrayList<String> coue = new ArrayList<>();
-            coue.add(str);
-            this.group = coue;
+            List<String> newGroupList = new ArrayList<>();
+            newGroupList.add(str);
+            this.group = newGroupList;
         } else {
             group.add(str);
         }
     }
 
-    public ArrayList<String> getGroup() {
+    public List<String> getGroup() {
         return group;
     }
 

@@ -1,11 +1,14 @@
+package ru.bot.extension;
+
 import org.telegram.abilitybots.api.db.DBContext;
 import org.telegram.abilitybots.api.objects.Flag;
 import org.telegram.abilitybots.api.objects.Reply;
 import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.abilitybots.api.util.AbilityExtension;
+import ru.bot.objects.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public class StudentAbilityExtension implements AbilityExtension {
@@ -21,7 +24,7 @@ public class StudentAbilityExtension implements AbilityExtension {
         this.db = ddb;
     }
 
-    /**Ñòàğò*/
+    /**Ñòàğò*//*
     public Reply start() {
         return Reply.of(update -> {
             Long id = update.getMessage().getChatId();
@@ -74,7 +77,7 @@ public class StudentAbilityExtension implements AbilityExtension {
     }
 
 
-    /**...ÊÓĞÑ........................................................................................................*/
+    *//**...ÊÓĞÑ........................................................................................................*//*
     public Reply addCourse() {
         return Reply.of(update -> {
             Long id = update.getMessage().getChatId();
@@ -116,7 +119,7 @@ public class StudentAbilityExtension implements AbilityExtension {
     }
 
 
-    /**...ÇÀÄÀÍÈß.....................................................................................................*/
+    *//**...ÇÀÄÀÍÈß.....................................................................................................*//*
     public Reply task() {
         return Reply.of(update -> {
             Long id = update.getMessage().getChatId();
@@ -139,7 +142,7 @@ public class StudentAbilityExtension implements AbilityExtension {
         Map<Integer, Task> task = db.getTaskMap();
         Map<Integer, Course> course = db.getCourseMap();
         Course idCourse = course.get(db.getUserStatus().get(id).getIdCourse());
-        ArrayList<Integer> idTask = idCourse.getIdTasks();
+        List<Integer> idTask = idCourse.getIdTasks();
         int q = 0;
         String[] myArray;
         if (idTask != null) {
@@ -221,5 +224,5 @@ public class StudentAbilityExtension implements AbilityExtension {
                 comment += "- " + s + "\n\n";
             }
         }, update -> update.getMessage().getText().equals("Èñòîğèÿ êîììåíòàğèåâ"));
-    }
+    }*/
 }
