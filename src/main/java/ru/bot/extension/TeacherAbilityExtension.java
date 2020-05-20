@@ -29,7 +29,7 @@ public class TeacherAbilityExtension implements AbilityExtension {
         this.db = ddb;
     }
 
-    /*...............................................................................................................*/
+    /**...............................................................................................................*/
     /*Старт преподавателя*/
     /*public Reply start() {
         return Reply.of(update -> {
@@ -65,10 +65,10 @@ public class TeacherAbilityExtension implements AbilityExtension {
                 silent.execute(Keyboard.addKeyboard(myArray, update, answer));
             }
         }, update -> update.getMessage().getText().equals("Назад"));
-    }
-*/
-    /*...КУРС........................................................................................................*/
-   /* public Reply course() {
+    }*/
+
+    /**...КУРС........................................................................................................*/
+   /*public Reply course() {
         return Reply.of(update -> {
             Long id = update.getMessage().getChatId();
             String text = update.getMessage().getText();
@@ -78,17 +78,17 @@ public class TeacherAbilityExtension implements AbilityExtension {
             answer = db.getCourse(status.getIdCourse()).getName() + "\n\n" + db.getCourse(status.getIdCourse()).getDescription();
             silent.execute(Keyboard.addKeyboard(new String[]{"Добавить задание", "Посмотреть задания", "Группы", "Ссылки", "Изменить курс", "Удалить курс"}, update, answer));
         }, update -> Arrays.stream(getCourse(update.getMessage().getChatId())).anyMatch(update.getMessage().getText()::equals));
-    }
+    }*/
 
-    public Reply viewCourse() {
+    /*public Reply viewCourse() {
         return Reply.of(update -> {
             Long id = update.getMessage().getChatId();
             String[] myArray = getCourse(id);
             answer = "Ваши курсы:";
             silent.execute(Keyboard.addKeyboard(myArray, update, answer));
         }, update -> update.getMessage().getText().equals("Посмотреть курсы"));
-    }
-*/
+    }*/
+
     /*public String[] getCourse(Long id) {
         Teacher teacher = db.getTeacher(id);
         Map<Integer, Course>  course = db.getCourseMap();
@@ -99,9 +99,9 @@ public class TeacherAbilityExtension implements AbilityExtension {
             q++;
         }
         return myArray;
-    }
+    }*/
 
-    public Reply addCourse() {
+    /*public Reply addCourse() {
         return Reply.of(update -> {
             Long id = update.getMessage().getChatId();
             Course course = new Course();
@@ -110,9 +110,9 @@ public class TeacherAbilityExtension implements AbilityExtension {
             silent.send("Введите название", update.getMessage().getChatId());
         }, update -> (update.getMessage().getText().equals("Добавить курс")
                 || update.getMessage().getText().equals("Изменить курс")));
-    }
+    }*/
 
-    public Reply addNextCourse() {
+    /*public Reply addNextCourse() {
         return Reply.of(update -> {
             Long id = update.getMessage().getChatId();
             Course course = db.getCreateCourse().get(id);
@@ -137,9 +137,9 @@ public class TeacherAbilityExtension implements AbilityExtension {
         }, update -> db.getCreateCourse().get(update.getMessage().getChatId()) != null
                 && !update.getMessage().getText().equals("Добавить курс")
                 && !update.getMessage().getText().equals("Изменить курс"));
-    }
+    }*/
 
-    public Reply delCourse() {
+    /*public Reply delCourse() {
         return Reply.of(update -> {
             Long id = update.getMessage().getChatId();
             int idCourse = db.getUserStatus().get(id).getIdCourse();
@@ -153,10 +153,10 @@ public class TeacherAbilityExtension implements AbilityExtension {
             answer = "Ваши курсы:";
             silent.execute(Keyboard.addKeyboard(myArray, update, answer));
         }, update -> update.getMessage().getText().equals("Удалить курс"));
-    }
+    }*/
 
-    *//*...ЗАДАНИЯ.....................................................................................................*//*
-    public Reply task() {
+    /*...ЗАДАНИЯ.....................................................................................................*/
+    /*public Reply task() {
         return Reply.of(update -> {
             Long id = update.getMessage().getChatId();
             String text = update.getMessage().getText();
@@ -174,18 +174,18 @@ public class TeacherAbilityExtension implements AbilityExtension {
                 silent.execute(Keyboard.addKeyboard(new String[]{"Изменить задание", "Удалить задание"}, update, answer));
             }
         }, update -> Arrays.stream(getTask(update.getMessage().getChatId())).anyMatch(update.getMessage().getText()::equals));
-    }
+    }*/
 
-    public Reply viewTask() {
+    /*public Reply viewTask() {
         return Reply.of(update -> {
             Long id = update.getMessage().getChatId();
             String[] myArray = getTask(id);
             answer = "Ваши задания:";
             silent.execute(Keyboard.addKeyboard(myArray, update, answer));
         }, update -> update.getMessage().getText().equals("Посмотреть задания"));
-    }
+    }*/
 
-    public String[] getTask(Long id) {
+    /*public String[] getTask(Long id) {
         if (db.getUserStatus().get(id).getIdCourse() == -1) {
             return new String[0];
         }
@@ -207,9 +207,9 @@ public class TeacherAbilityExtension implements AbilityExtension {
             q++;
         }
         return myArray;
-    }
+    }*/
 
-    public Reply addTask() {
+    /*public Reply addTask() {
         return Reply.of(update -> {
             Long id = update.getMessage().getChatId();
             Task task = new Task();
@@ -218,9 +218,9 @@ public class TeacherAbilityExtension implements AbilityExtension {
             silent.send("Введите название задания", update.getMessage().getChatId());
         }, update -> (update.getMessage().getText().equals("Добавить задание")
                 || update.getMessage().getText().equals("Изменить задание")));
-    }
+    }*/
 
-    public Reply addNextTask() {
+    /*public Reply addNextTask() {
         return Reply.of(update -> {
             Long id = update.getMessage().getChatId();
             Task task = db.getCreateTask().get(id);
@@ -262,9 +262,9 @@ public class TeacherAbilityExtension implements AbilityExtension {
                 db.getCreateTask().get(update.getMessage().getChatId()) != null
                         && !update.getMessage().getText().equals("Добавить задание")
                         && !update.getMessage().getText().equals("Изменить задание"));
-    }
+    }*/
 
-    public Reply delTask() {
+    /*public Reply delTask() {
         return Reply.of(update -> {
             Long id = update.getMessage().getChatId();
             Course course = db.getCourse(db.getUserStatus().get(id).getIdCourse());
@@ -279,11 +279,11 @@ public class TeacherAbilityExtension implements AbilityExtension {
             answer = "Ваши задания:";
             silent.execute(Keyboard.addKeyboard(myArray, update, answer));
         }, update -> update.getMessage().getText().equals("Удалить задание"));
-    }
-*/
+    }*/
+
 
     /*...ГРУППЫ......................................................................................................*/
-/*    public Reply viewGroup() {
+    /*public Reply viewGroup() {
         return Reply.of(update -> {
             Long id = update.getMessage().getChatId();
             String[] myArray = getGroup(id);
@@ -338,8 +338,8 @@ public class TeacherAbilityExtension implements AbilityExtension {
             answer = "Группа " + update.getMessage().getText();
             silent.execute(ru.bot.extension.Keyboard.addKeyboard(new String[]{"Статистика", "Участники"}, update, answer));
         }, update -> Arrays.stream(getGroup(update.getMessage().getChatId())).anyMatch(update.getMessage().getText()::equals));
-    }*/
-
+    }
+*/
 
     /*...Студенты.....................................................................................................*/
 //    public Reply student() {

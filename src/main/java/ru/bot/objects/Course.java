@@ -56,7 +56,7 @@ public class Course implements Serializable {
         this.tasks = task;
     }
 
-    public void removeTask(Integer id) {
+    public void removeTask(String id) {
         tasks.remove(id);
     }
 

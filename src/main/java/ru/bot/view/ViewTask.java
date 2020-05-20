@@ -13,9 +13,9 @@ public class ViewTask implements ViewMaker<Task> {
         String nameCourse = storageCourses.get(idCourse).getName();
 
         return "Название задания:\n" + task.getName() +
-                "Описание задания:\n" + task.getDescription() +
-                "Soft deadline:\n" + task.getSoft() +
-                "Hard deadline:\n" + task.getHard() +
-                "Курс:\n" + nameCourse;
+                "\n\nОписание задания:\n" + task.getDescription() +
+                "\n\nSoft deadline:\n" + task.getSoft() +
+                "\n\nHard deadline:\n" + task.getHard() +
+                "\n\nКурс:\n" + nameCourse;
     }
 }

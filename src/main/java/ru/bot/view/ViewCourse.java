@@ -15,7 +15,8 @@ public class ViewCourse implements ViewMaker<Course> {
         String nameTeacher = storageTeacher.get(idTeacher).getName();
 
         return "Название курса:\n" + course.getName() +
-                "Описание курса:\n" + course.getDescription() +
-                "Преподаватель:\n" + nameTeacher;
+                "\n\nОписание курса:\n" + course.getDescription() +
+                "\n\nПреподаватель:\n" + nameTeacher +
+                "\n\nУникальный идентификатор:" + course.getIdTasks();
     }
 }

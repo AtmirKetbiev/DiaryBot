@@ -160,7 +160,7 @@ public class DBManager implements AbilityExtension {
 
 
     /** Студенты .....................................................................................................*/
-    public void addStudent(Long id, Student student) {
+    /*public void addStudent(Long id, Student student) {
         if (teacherMap.get(id) == null) {
             this.studentMap.put(id, student);
         }
@@ -173,7 +173,7 @@ public class DBManager implements AbilityExtension {
     public Map<Long, Student> getStudentMap() {
         return studentMap;
     }
-
+*/
 
     /** Добавление студентов..........................................................................................*/
     public Map<Long, Student> getCreateStudent() {
@@ -184,7 +184,7 @@ public class DBManager implements AbilityExtension {
         this.createStudent = createStudent;
     }
 
-    /** Создание курса................................................................................................*/
+/*    *//** Создание курса................................................................................................*//*
     public Map<Long, Course> getCreateCourse() {
         return createCourse;
     }
@@ -197,7 +197,7 @@ public class DBManager implements AbilityExtension {
         createCourse.remove(id);
     }
 
-    /** Создание задания..............................................................................................*/
+    *//** Создание задания..............................................................................................*//*
     public Map<Long, Task> getCreateTask() {
         return createTask;
     }
@@ -208,7 +208,7 @@ public class DBManager implements AbilityExtension {
 
     public void removeCreateTask(Long id) {
         createTask.remove(id);
-    }
+    }*/
 
 
 

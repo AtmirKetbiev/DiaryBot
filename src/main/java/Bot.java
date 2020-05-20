@@ -2,6 +2,7 @@ import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.util.AbilityExtension;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import ru.bot.extension.TeacherAbilityExtension;
+import ru.bot.logic.TeacherAbility;
 
 public class Bot extends AbilityBot implements Constants {
 
@@ -11,7 +12,7 @@ public class Bot extends AbilityBot implements Constants {
     }
 
     public AbilityExtension ability() {
-        return new TeacherAbilityExtension(silent, db);
+        return new TeacherAbility(silent, db);
     }
 
     @Override
