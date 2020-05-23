@@ -6,12 +6,13 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Keyboard {
 
     private static ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
 
-    public static SendMessage addKeyboard(String[] text, Update update, String answer) {
+    public static SendMessage addKeyboard(List<String> text, Update update, String answer) {
         SendMessage sendMessage = new SendMessage().setChatId(update.getMessage().getChatId());
         ArrayList<KeyboardRow> keyboard = new ArrayList<>();
         KeyboardRow keyboardRow = new KeyboardRow();

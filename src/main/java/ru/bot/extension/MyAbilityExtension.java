@@ -16,12 +16,12 @@ public class MyAbilityExtension implements AbilityExtension {
         this.db = db;
     }
 
-    public Reply start() {
+    /*public Reply start() {
         return Reply.of(update -> {
             answer = "Выберете:";
             silent.execute(Keyboard.addKeyboard(new String[]{"add course", "view course", "delete course"}, update, answer));
         }, update -> update.getMessage().getText().equals("/start"));
-    }
+    }*/
 
 
 

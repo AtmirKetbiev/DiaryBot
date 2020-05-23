@@ -1,11 +1,8 @@
 package ru.bot.logic;
 
 import org.telegram.abilitybots.api.db.DBContext;
-import org.telegram.abilitybots.api.objects.Reply;
-import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.bot.DB.*;
-import ru.bot.extension.Keyboard;
 import ru.bot.objects.Course;
 import ru.bot.objects.Status;
 import ru.bot.objects.Task;
@@ -14,6 +11,8 @@ import ru.bot.view.ViewCourse;
 import ru.bot.view.ViewTask;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +25,7 @@ public class TeacherManager {
     private StorageContext storageContext;
     private StorageCreate storageCreate;
     private DBContext db;
+    private ContextAnswer contextAnswer = new ContextAnswer();
 
     public TeacherManager(DBContext db) {
         this.storageTeacher = new StorageTeacher(db);
@@ -39,43 +39,42 @@ public class TeacherManager {
 
     /**Начало.........................................................................................................*/
 
-    public String start(Update update) {
+    public ContextAnswer start(Update update) {
         Long id = update.getMessage().getChatId();
         Teacher teacher = new Teacher();
         teacher.setName("препод");
         storageTeacher.set(id, teacher);
-        return "Добро пожаловать!";
+        contextAnswer.setAnswer("Добро пожаловать!");
+        contextAnswer.setList(Arrays.asList("Добавить курс", "Посмотреть курсы", "Изменить профиль", "Помощь"));
+        return contextAnswer;
     }
 
-    public String[] back(Update update) {
-        String[] answer = new String[0];
+    public ContextAnswer back(Update update) {
         Long id = update.getMessage().getChatId();
 
         Status status = storageContext.get(id);
         if (status.getIdTask() == null && status.getIdCourse() == null) {
             status.setIdCourse(null);
-            answer = new String[]{"Добавить курс", "Посмотреть курсы", "Изменить профиль", "Помощь"};
-            //silent.execute(Keyboard.addKeyboard(new String[]{"Добавить курс", "Посмотреть курсы", "Изменить профиль", "Помощь"}, update, answer));
+            contextAnswer.setAnswer("Добро пожаловать!");
+            contextAnswer.setList(Arrays.asList("Добавить курс", "Посмотреть курсы", "Изменить профиль", "Помощь"));
         }
         if (status.getIdTask() == null && status.getIdCourse() != null) {
             status.setIdCourse(null);
             storageContext.set(id, status);
-            String[] myArray = getCourse(id);
-            answer = myArray;
-            //silent.execute(Keyboard.addKeyboard(myArray, update, answer));
+            contextAnswer.setAnswer("Ваши курсы:");
+            contextAnswer.setList(getCourse(id));
         }
         if (status.getIdTask() != null) {
             status.setIdTask(null);
             storageContext.set(id, status);
-            String[] myArray = getTask(id);
-            answer = myArray;
-            //silent.execute(Keyboard.addKeyboard(myArray, update, answer));
+            contextAnswer.setAnswer("Ваши задания:");
+            contextAnswer.setList(getTask(id));
         }
-        return answer;
+        return contextAnswer;
     }
 
     /**Курсы..........................................................................................................*/
-    public String course(Update update) {
+    public ContextAnswer course(Update update) {
         String answer;
         Long id = update.getMessage().getChatId();
         String text = update.getMessage().getText();
@@ -83,66 +82,81 @@ public class TeacherManager {
         status.setIdCourse(storageCourses.getIdByName(text, id));
         storageContext.set(id, status);
         ViewCourse view = new ViewCourse();
-        answer = view.make(storageCourses.get(status.getIdCourse()), db);
-        return answer;
+        contextAnswer.setAnswer(view.make(storageCourses.get(status.getIdCourse()), db));
+        contextAnswer.setList(Arrays.asList("Добавить задание", "Посмотреть задания", "Группы", "Ссылки", "Изменить курс", "Удалить курс"));
+        return contextAnswer;
     }
 
-    public String addCourse(Update update) {
+    public ContextAnswer addCourse(Update update) {
         Long id = update.getMessage().getChatId();
         Course course = new Course();
         course.setIdTeacher(id);
         storageCreate.setCreateCourse(course);
-        return "Введите название";
+        contextAnswer.setAnswer("Введите название");
+        contextAnswer.setList(null);
+        return contextAnswer;
     }
 
-    public String[] viewCourse(Update update) {
+    public ContextAnswer viewCourse(Update update) {
         Long id = update.getMessage().getChatId();
-        String[] myArray = getCourse(id);
-        return myArray;
+        contextAnswer.setAnswer("Ваши курсы");
+        contextAnswer.setList(getCourse(id));
+        return contextAnswer;
     }
 
-    public String addNextCourse(Update update) {
+    public ContextAnswer addNextCourse(Update update) {
         String answer = "";
         Long id = update.getMessage().getChatId();
         Course course = storageCreate.getCreateCourse().get(id);
-        if(update.getMessage().getText().equals("Назад")) {
-            answer = "Редактирование курса отменено";
+        if(getCourse(id).contains(update.getMessage().getText())) {
             storageCreate.removeCreateCourse(id);
+            contextAnswer.setAnswer("Такой курс уже существует!");
+            contextAnswer.setList(null);
+            return contextAnswer;
+        }
+        if(update.getMessage().getText().equals("Назад")) {
+            storageCreate.removeCreateCourse(id);
+            contextAnswer.setAnswer("Редактирование курса отменено");
+            contextAnswer.setList(null);
         } else {
             if (course.getName() == null) {
-                answer = "Описание";
                 course.setName(update.getMessage().getText());
+                contextAnswer.setAnswer("Описание");
+                contextAnswer.setList(null);
             } else if (course.getDescription() == null) {
                 course.setDescription(update.getMessage().getText());
             }
             if (course.check()) {
                 storageCourses.set(course);
                 storageCreate.removeCreateCourse(id);
-                answer = "Спасибо";
+                contextAnswer.setAnswer("Спасибо");
+                contextAnswer.setList(null);
             } else {
                 storageCreate.setCreateCourse(course);
             }
         }
-        return answer;
+        return contextAnswer;
     }
 
-    public String[] delCourse(Update update) {
+    public ContextAnswer delCourse(Update update) {
         Long id = update.getMessage().getChatId();
         String idCourse = storageContext.get(id).getIdCourse();
         storageCourses.remove(idCourse, id);
         Status status = storageContext.get(id);
         status.setIdCourse(null);
         storageContext.set(id, status);
-        return getCourse(id);
+        contextAnswer.setAnswer("Курс удален\nВаши курсы:");
+        contextAnswer.setList(getCourse(id));
+        return contextAnswer;
     }
 
-    public String[] getCourse(Long id) {
+    public List<String> getCourse(Long id) {
         Teacher teacher = storageTeacher.get(id);
         Map<String, Course> course = storageCourses.getMap();
         int q = 0;
-        String[] myArray = new String[teacher.getCourses().size()];
+        List<String> myArray = new ArrayList<String>(0);
         for (String i : teacher.getCourses()) {
-            myArray[q] = course.get(i).getName();
+            myArray.add(course.get(i).getName());
             q++;
         }
         return myArray;
@@ -150,57 +164,66 @@ public class TeacherManager {
 
     /**...............................................................................................................*/
 
-    public String task(Update update) {
+    public ContextAnswer task(Update update) {
         Long id = update.getMessage().getChatId();
         String text = update.getMessage().getText();
         Status status = storageContext.get(id);
         status.setIdTask(storageTasks.getIdByName(text, status.getIdCourse()));
         storageContext.set(id, status);
-        String answer = "Вы выбрали задание" + text;
         if (status.getIdStudent() != -1) {
-            //silent.execute(Keyboard.addKeyboard(new String[]{"Снять отметку", "Изменить оценку", "Добавить комментарий"}, update, answer));
+            contextAnswer.setAnswer("Вы выбрали задание" + text);
+            contextAnswer.setList(Arrays.asList("Снять отметку", "Изменить оценку", "Добавить комментарий"));
         } else {
             ViewTask view = new ViewTask();
-            answer = view.make(storageTasks.get(status.getIdTask()), db);
+            contextAnswer.setAnswer(view.make(storageTasks.get(status.getIdTask()), db));
+            contextAnswer.setList(Arrays.asList("Изменить задание", "Удалить задание"));
         }
-        return answer;
+        return contextAnswer;
     }
 
-    public String addTask(Update update) {
-            Long id = update.getMessage().getChatId();
-            Task task = new Task();
-            task.setIdCourse(storageContext.get(id).getIdCourse());
-            storageCreate.setCreateTask(id, task);
-            return "Введите название задания";
+    public ContextAnswer addTask(Update update) {
+        Long id = update.getMessage().getChatId();
+        Task task = new Task();
+        task.setIdCourse(storageContext.get(id).getIdCourse());
+        storageCreate.setCreateTask(id, task);
+        contextAnswer.setAnswer("Введите название задания");
+        contextAnswer.setList(null);
+        return contextAnswer;
     }
 
-    public String addNextTask(Update update) {
+    public ContextAnswer addNextTask(Update update) {
         String answer = "";
         Long id = update.getMessage().getChatId();
         Task task = storageCreate.getCreateTask().get(id);
         if(update.getMessage().getText().equals("Назад")) {
-            answer = "Редактирование задания отменено";
             storageCreate.removeCreateTask(id);
+            contextAnswer.setAnswer("Редактирование задания отменено");
+            contextAnswer.setList(null);
         } else {
             if (task.getName() == null) {
-                answer = "Описание";
+                contextAnswer.setAnswer("Описание");
+                contextAnswer.setList(null);
                 task.setName(update.getMessage().getText());
             } else if (task.getDescription() == null) {
                 task.setDescription(update.getMessage().getText());
-                answer = "введите soft в формате dd/mm/yyyy";
+                contextAnswer.setAnswer("введите soft в формате dd/mm/yyyy");
+                contextAnswer.setList(null);
             } else if (task.getSoft() == null) {
                 try {
                     task.setSoft(update.getMessage().getText());
-                    answer = "введите hard в формате dd/mm/yyyy";
+                    contextAnswer.setAnswer("введите hard в формате dd/mm/yyyy");
+                    contextAnswer.setList(null);
                 } catch (ParseException e) {
-                    answer = "Не правильная дата, введите в формате dd/mm/yyyy";
+                    contextAnswer.setAnswer("Не правильная дата, введите в формате dd/mm/yyyy");
+                    contextAnswer.setList(null);
                     e.printStackTrace();
                 }
             } else if (task.getHard() == null) {
                 try {
                     task.setHard(update.getMessage().getText());
                 } catch (ParseException e) {
-                    answer = "Не правильная дата, введите в формате dd/mm/yyyy";
+                    contextAnswer.setAnswer("Не правильная дата, введите в формате dd/mm/yyyy");
+                    contextAnswer.setList(null);
                     e.printStackTrace();
                 }
             }
@@ -212,15 +235,17 @@ public class TeacherManager {
                 storageCreate.setCreateTask(id, task);
             }
         }
-        return answer;
+        return contextAnswer;
     }
 
-    public String[] viewTask(Update update) {
+    public ContextAnswer viewTask(Update update) {
         Long id = update.getMessage().getChatId();
-        return getTask(id);
+        contextAnswer.setAnswer("Ваши курсы:");
+        contextAnswer.setList(getTask(id));
+        return contextAnswer;
     }
 
-    public String[] delTask(Update update) {
+    public ContextAnswer delTask(Update update) {
         Long id = update.getMessage().getChatId();
         Course course = storageCourses.get(storageContext.get(id).getIdCourse());
         course.removeTask(storageContext.get(id).getIdTask());
@@ -228,31 +253,56 @@ public class TeacherManager {
         Status status = storageContext.get(id);
         status.setIdTask(null);
         storageContext.set(id, status);
-    return getTask(id);
+        contextAnswer.setAnswer("Задание удалено!\nВаши задания:");
+        contextAnswer.setList(getTask(id));
+    return contextAnswer;
     }
 
 
-    public String[] getTask(Long id) {
+    public List<String> getTask(Long id) {
+        List<String> myArray = new ArrayList<String>(0);
         if (storageContext.get(id).getIdCourse() == null) {
-            return new String[0];
+            return myArray;
         }
         Map<String, Task> task = storageTasks.getMap();
         Map<String, Course> course = storageCourses.getMap();
         Course idCourse = course.get(storageContext.get(id).getIdCourse());
         List<String> idTask = idCourse.getIdTasks();
         int q = 0;
-        String[] myArray;
         if (idTask != null) {
-            myArray = new String[idTask.size()];
-
+            for (String i : idTask) {
+                myArray.add(task.get(i).getName());
+                q++;
+            }
         } else {
-            myArray = new String[0];
             return myArray;
         }
-        for (String i : idTask) {
-            myArray[q] = task.get(i).getName();
-            q++;
-        }
+
         return myArray;
+    }
+
+    public String del(Update update) {
+        for (String i : storageCourses.getMap().keySet()) {
+            this.storageCourses.getMap().remove(i);
+        }
+        for (String i : storageTasks.getMap().keySet()) {
+            this.storageTasks.getMap().remove(i);
+        }
+        for (Long i : storageTeacher.getMap().keySet()) {
+            this.storageTeacher.getMap().remove(i);
+        }
+        for (Long i : storageStudent.getMap().keySet()) {
+            this.storageStudent.getMap().remove(i);
+        }
+        for (Long i : storageCreate.getCreateTask().keySet()) {
+            this.storageCreate.getCreateTask().remove(i);
+        }
+        for (Long i : storageCreate.getCreateCourse().keySet()) {
+            this.storageCreate.getCreateCourse().remove(i);
+        }
+        for (Long i : storageContext.getMap().keySet()) {
+            this.storageContext.getMap().remove(i);
+        }
+        return "Удалено";
     }
 }

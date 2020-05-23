@@ -1,13 +1,14 @@
 package ru.bot.objects;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Progress {
-    private int idCourse;
-    private int idTask;
+    private String idCourse;
+    private String idTask;
     private boolean mark;
     private String grade;
-    private ArrayList<String> comment;
+    private List<String> comment;
 
     public boolean isMark() {
         return mark;
@@ -17,19 +18,19 @@ public class Progress {
         this.mark = mark;
     }
 
-    public int getIdCourse() {
+    public String getIdCourse() {
         return idCourse;
     }
 
-    public void setIdCourse(int idCourse) {
+    public void setIdCourse(String idCourse) {
         this.idCourse = idCourse;
     }
 
-    public int getIdTask() {
+    public String getIdTask() {
         return idTask;
     }
 
-    public void setIdTask(int idTask) {
+    public void setIdTask(String idTask) {
         this.idTask = idTask;
     }
 
@@ -41,7 +42,7 @@ public class Progress {
         this.grade = grade;
     }
 
-    public ArrayList<String> getComment() {
+    public List<String> getComment() {
         return comment;
     }
 

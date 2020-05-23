@@ -1,9 +1,7 @@
 package ru.bot.view;
 
 import org.telegram.abilitybots.api.db.DBContext;
-import ru.bot.DB.StorageContext;
 import ru.bot.DB.StorageTeacher;
-import ru.bot.extension.Keyboard;
 import ru.bot.objects.Course;
 
 public class ViewCourse implements ViewMaker<Course> {

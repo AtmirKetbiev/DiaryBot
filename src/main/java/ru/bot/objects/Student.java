@@ -6,6 +6,7 @@ import org.telegram.abilitybots.api.db.DBContext;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -16,7 +17,7 @@ public class Student implements Serializable {
 
     private String name;                    // Имя студента
     private String group;                // id группы
-    private ArrayList<Integer> courses;    // Список с id курсов
+    private List<String> courses;    // Список с id курсов
     private Map<Integer, Progress> progresses;
 
     public String getStat() {
@@ -42,11 +43,11 @@ public class Student implements Serializable {
         this.group = group;
     }
 
-    public ArrayList<Integer> getCourses() {
+    public List<String> getCourses() {
         return courses;
     }
 
-    public void setCourses(ArrayList<Integer> courses) {
+    public void setCourses(ArrayList<String> courses) {
         this.courses = courses;
     }
 
@@ -60,7 +61,7 @@ public class Student implements Serializable {
         progresses.put(progresses.size(), progress);
     }
 
-    public Progress getProgresses(int idCourse, int idTask) {
+    public Progress getProgresses(String idCourse, String idTask) {
         for (int i : progresses.keySet()) {
             if (progresses.get(i).getIdCourse() == idCourse && progresses.get(i).getIdTask() == idTask) {
                 return progresses.get(i);
