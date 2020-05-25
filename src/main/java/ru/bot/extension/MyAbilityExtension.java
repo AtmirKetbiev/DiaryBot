@@ -32,7 +32,7 @@ public class MyAbilityExtension implements AbilityExtension {
 //            Bot.flagT = "";
 //            switch (update.getMessage().getText()) {
 //                case ("/start"):
-//                    silent.execute(ru.bot.extension.Keyboard.addKeyboard(new String[]{"ru.bot.diary.objects.ru.bot.objects.Teacher", "ru.bot.diary.objects.ru.bot.objects.Student"}, update, Constants.answerKeyboard.SELECT.toString()));
+//                    silent.execute(ru.bot.extension.Keyboard.addKeyboard(new String[]{"ru.bot.diary.objects.ru.bot.objects.Teacher", "ru.bot.diary.objects.ru.bot.objects.Student"}, update, ru.bot.extension.Constants.answerKeyboard.SELECT.toString()));
 //                    break;
 //
 //                //**Выбор пользователя*//*
@@ -78,10 +78,10 @@ public class MyAbilityExtension implements AbilityExtension {
 //                    silent.execute(ru.bot.extension.Keyboard.addKeyboard(new String[]{"Today ", "Tomorrow", "For a week", "back"}, update, answer));
 //                    break;
 //                case ("Today"):
-//                    silent.send(ru.bot.extension.Timetable.timetable(Constants.day), update.getMessage().getChatId());
+//                    silent.send(ru.bot.extension.Timetable.timetable(ru.bot.extension.Constants.day), update.getMessage().getChatId());
 //                    break;
 //                case ("Tomorrow"):
-//                    silent.send(ru.bot.extension.Timetable.timetable(Constants.day + 1), update.getMessage().getChatId());
+//                    silent.send(ru.bot.extension.Timetable.timetable(ru.bot.extension.Constants.day + 1), update.getMessage().getChatId());
 //                    break;
 //                case ("For a week"):
 //                    silent.send(ru.bot.extension.Timetable.timetable(0), update.getMessage().getChatId());
@@ -100,7 +100,7 @@ public class MyAbilityExtension implements AbilityExtension {
 //                default:
 //                    silent.execute(ru.bot.extension.Keyboard.addKeyboard(new String[]{"ru.bot.diary.objects.ru.bot.objects.Teacher ", "ru.bot.diary.objects.ru.bot.objects.Student"}, update, answer));
 //            }
-//        }, update -> Arrays.asList(Constants.keyboardWords).contains(update.getMessage().getText()));
+//        }, update -> Arrays.asList(ru.bot.extension.Constants.keyboardWords).contains(update.getMessage().getText()));
 //    }
 
     /*public Reply viewCourse() {

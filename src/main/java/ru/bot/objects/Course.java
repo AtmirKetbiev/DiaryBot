@@ -8,11 +8,21 @@ public class Course implements Serializable {
 
     //private static final long serialVersionUID = 1L;
 
+    private String code;
     private String name;
     private String description;
     private Long idTeacher;
     private List<String> tasks;
     private List<String> group;
+    private List<String> links;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public String getName() {
         return name;
@@ -76,6 +86,20 @@ public class Course implements Serializable {
 
     public void removeGrop(Integer id) {
         group.remove(id);
+    }
+
+    public List<String> getLinks() {
+        return links;
+    }
+
+    public void setLinks(String links) {
+        if (links == null) {
+            ArrayList<String> array = new ArrayList<>();
+            array.add(links);
+            this.links = array;
+        } else {
+            tasks.add(links);
+        }
     }
 
     public boolean check() {

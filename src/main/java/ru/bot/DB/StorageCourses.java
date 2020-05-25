@@ -42,9 +42,9 @@ public class StorageCourses implements Storage <Course, String, Long> {
             }
             this.courseMap.put(idCourse, course);
         } else {
-            String id = UUID.randomUUID().toString().replace("-", "");
-            this.courseMap.put(id, course);
-            teacher.addCourses(id);
+            //String id = UUID.randomUUID().toString().replace("-", "");
+            this.courseMap.put(course.getCode(), course);
+            teacher.addCourses(course.getCode());
             storageTeacher.getMap().put(course.getIdTeacher(), teacher);
         }
     }

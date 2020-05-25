@@ -4,9 +4,7 @@ import org.telegram.abilitybots.api.db.DBContext;
 import org.telegram.abilitybots.api.objects.Flag;
 import org.telegram.abilitybots.api.objects.Reply;
 import org.telegram.abilitybots.api.sender.SilentSender;
-import ru.bot.DB.StorageCreate;
 import ru.bot.extension.Keyboard;
-import ru.bot.objects.Student;
 
 public class StudentAbility implements org.telegram.abilitybots.api.util.AbilityExtension {
     private StudentManager studentManager;
@@ -21,13 +19,13 @@ public class StudentAbility implements org.telegram.abilitybots.api.util.Ability
 
     public Reply start() {
         return Reply.of(update -> {
-            silent.execute(Keyboard.addKeyboard(studentManager.start(update).getList(), update, studentManager.start(update).getAnswer()));
+            silent.execute(Keyboard.listKeyboard(studentManager.start(update).getList(), update, studentManager.start(update).getAnswer()));
         }, update -> update.getMessage().getText().equals("/start"));
     }
 
     public Reply back() {
         return Reply.of(update -> {
-            silent.execute(Keyboard.addKeyboard(studentManager.back(update).getList(), update, studentManager.back(update).getAnswer()));
+            silent.execute(Keyboard.listKeyboard(studentManager.back(update).getList(), update, studentManager.back(update).getAnswer()));
         }, update -> update.getMessage().getText().equals("Назад"));
     }
 
@@ -41,13 +39,13 @@ public class StudentAbility implements org.telegram.abilitybots.api.util.Ability
 
     public Reply course() {
         return Reply.of(update -> {
-            silent.execute(Keyboard.addKeyboard(studentManager.course(update).getList(), update, studentManager.course(update).getAnswer()));
+            silent.execute(Keyboard.listKeyboard(studentManager.course(update).getList(), update, studentManager.course(update).getAnswer()));
         }, update -> studentManager.getCourse(update.getMessage().getChatId()).contains(update.getMessage().getText()));
     }
 
     public Reply viewCourse() {
         return Reply.of(update -> {
-            silent.execute(Keyboard.addKeyboard(studentManager.viewCourse(update).getList(), update, studentManager.viewCourse(update).getAnswer()));
+            silent.execute(Keyboard.listKeyboard(studentManager.viewCourse(update).getList(), update, studentManager.viewCourse(update).getAnswer()));
         }, update -> update.getMessage().getText().equals("Курсы"));
     }
 
@@ -55,7 +53,7 @@ public class StudentAbility implements org.telegram.abilitybots.api.util.Ability
 
     public Reply task() {
         return Reply.of(update -> {
-            silent.execute(Keyboard.addKeyboard(studentManager.task(update).getList(), update, studentManager.task(update).getAnswer()));
+            silent.execute(Keyboard.listKeyboard(studentManager.task(update).getList(), update, studentManager.task(update).getAnswer()));
         }, update -> studentManager.getTask(update.getMessage().getChatId()).contains(update.getMessage().getText()));
     }
 

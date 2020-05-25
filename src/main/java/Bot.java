@@ -1,14 +1,13 @@
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.util.AbilityExtension;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
-import ru.bot.extension.TeacherAbilityExtension;
+import ru.bot.extension.Constants;
 import ru.bot.logic.TeacherAbility;
 
-public class Bot extends AbilityBot implements Constants {
+public class Bot extends AbilityBot {
 
     Bot(DefaultBotOptions botOptions) {
-
-        super(TOKEN, BOT_USERNAME, botOptions);
+        super(Constants.TOKEN, Constants.BOT_USERNAME, botOptions);
     }
 
     public AbilityExtension ability() {
@@ -22,11 +21,11 @@ public class Bot extends AbilityBot implements Constants {
 
     @Override
     public String getBotUsername() {
-        return BOT_USERNAME;
+        return Constants.BOT_USERNAME;
     }
 
     @Override
     public String getBotToken() {
-        return TOKEN;
+        return Constants.TOKEN;
     }
 }

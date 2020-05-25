@@ -27,6 +27,10 @@ public class StorageCreate {
         return createCourse;
     }
 
+    public Course getCourse(Long id) {
+        return createCourse.get(id);
+    }
+
     public void setCreateCourse(Course course) {
         this.createCourse.put(course.getIdTeacher(), course);
     }

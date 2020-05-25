@@ -53,7 +53,7 @@ public class StorageTasks implements Storage<Task, String, String> {
     @Override
     public String getIdByName(String name, String idCourse) {
         for (String i : taskMap.keySet()) {
-            if (taskMap.get(i).getName().equals(name) && taskMap.get(i).getIdCourse() == (idCourse)) {
+            if (taskMap.get(i).getName().equals(name) && taskMap.get(i).getIdCourse().equals(idCourse)) {
                 return i;
             }
         }
