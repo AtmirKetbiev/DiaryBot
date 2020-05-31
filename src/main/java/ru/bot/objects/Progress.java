@@ -1,14 +1,15 @@
 package ru.bot.objects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Progress {
+public class Progress implements Serializable {
     private String idCourse;
     private String idTask;
     private boolean mark;
     private String grade;
-    private List<String> comment;
+    private ArrayList<String> comment = new ArrayList<>();
 
     public boolean isMark() {
         return mark;
@@ -47,12 +48,6 @@ public class Progress {
     }
 
     public void addComment(String comment) {
-        if (comment == null) {
-            ArrayList<String> coue = new ArrayList<>();
-            coue.add(comment);
-            this.comment = coue;
-        } else {
             this.comment.add(comment);
-        }
     }
 }

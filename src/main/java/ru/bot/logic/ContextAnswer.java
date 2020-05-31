@@ -3,15 +3,15 @@ package ru.bot.logic;
 import java.util.List;
 
 public class ContextAnswer {
-    private List<String> list;
+    private List<String> buttonsList;
     private String answer;
 
-    public List<String> getList() {
-        return list;
+    public List<String> getButtonsList() {
+        return buttonsList;
     }
 
-    public void setList(List<String> list) {
-        this.list = list;
+    public void setButtonsList(List<String> buttonsList) {
+        this.buttonsList = buttonsList;
     }
 
     public String getAnswer() {

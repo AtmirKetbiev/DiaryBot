@@ -22,13 +22,13 @@ public class TeacherAbility implements org.telegram.abilitybots.api.util.Ability
     public Reply start() {
         return Reply.of(update -> {
             silent.execute(Keyboard.constantKeyboard(Constants.startKeyboardTeacher, update, teacherManager.start(update).getAnswer()));
-            //silent.execute(Keyboard.listKeyboard(teacherManager.start(update).getList(), update, teacherManager.start(update).getAnswer()));
         }, update -> update.getMessage().getText().equals("/start"));
     }
 
     public Reply back() {
         return Reply.of(update -> {
-            silent.execute(Keyboard.listKeyboard(teacherManager.back(update).getList(), update, teacherManager.back(update).getAnswer()));
+            ContextAnswer contextAnswer = teacherManager.back(update);
+            silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
         }, update -> update.getMessage().getText().equals("Назад"));
     }
 
@@ -63,7 +63,8 @@ public class TeacherAbility implements org.telegram.abilitybots.api.util.Ability
 
     public Reply viewCourse() {
         return Reply.of(update -> {
-            silent.execute(Keyboard.listKeyboard(teacherManager.viewCourse(update).getList(), update, teacherManager.viewCourse(update).getAnswer()));
+            ContextAnswer contextAnswer = teacherManager.viewCourse(update);
+            silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
         }, update -> update.getMessage().getText().equals("Посмотреть курсы"));
     }
 
@@ -72,7 +73,6 @@ public class TeacherAbility implements org.telegram.abilitybots.api.util.Ability
             StorageCreate storageCreate = new StorageCreate(db);
             if (storageCreate.getCreateCourse().get(update.getMessage().getChatId())==null) {
                 silent.execute(Keyboard.constantKeyboard(Constants.courseKeyboardTeacher, update, teacherManager.course(update).getAnswer()));
-                //silent.execute(Keyboard.listKeyboard(teacherManager.course(update).getList(), update, teacherManager.course(update).getAnswer()));
             }
         }, update -> teacherManager.getCourse(update.getMessage().getChatId()).contains(update.getMessage().getText()));
     }
@@ -97,7 +97,7 @@ public class TeacherAbility implements org.telegram.abilitybots.api.util.Ability
     public Reply delCourse() {
         return Reply.of(update -> {
             ContextAnswer contextAnswer = teacherManager.delCourse(update);
-            silent.execute(Keyboard.listKeyboard(contextAnswer.getList(), update, contextAnswer.getAnswer()));
+            silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
         }, update -> update.getMessage().getText().equals("Удалить курс"));
     }
 
@@ -121,24 +121,57 @@ public class TeacherAbility implements org.telegram.abilitybots.api.util.Ability
 
     public Reply viewTask() {
         return Reply.of(update -> {
-            silent.execute(Keyboard.listKeyboard(teacherManager.viewTask(update).getList(), update, teacherManager.viewTask(update).getAnswer()));
+            ContextAnswer contextAnswer = teacherManager.viewTask(update);
+            silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
         }, update -> update.getMessage().getText().equals("Посмотреть задания"));
     }
 
     public Reply task() {
         return Reply.of(update -> {
             if (teacherManager.getTask(update.getMessage().getChatId()).contains(update.getMessage().getText())) {
-                silent.execute(Keyboard.constantKeyboard(Constants.taskKeyboardTeacher, update, teacherManager.start(update).getAnswer()));
-                //silent.execute(Keyboard.listKeyboard(teacherManager.task(update).getList(), update, teacherManager.task(update).getAnswer()));
+                silent.execute(Keyboard.constantKeyboard(Constants.taskKeyboardTeacher, update, teacherManager.task(update).getAnswer()));
             }
         }, update -> teacherManager.getTask(update.getMessage().getChatId()).contains(update.getMessage().getText()));
     }
 
     public Reply delTask() {
         return Reply.of(update -> {
-            silent.execute(Keyboard.listKeyboard(teacherManager.delTask(update).getList(), update, teacherManager.delTask(update).getAnswer()));
+            ContextAnswer contextAnswer = teacherManager.delTask(update);
+            silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
         }, update -> update.getMessage().getText().equals("Удалить задание"));
     }
+
+    /**...............................................................................................................*/
+
+   public Reply group() {
+        return Reply.of(update -> {
+            ContextAnswer contextAnswer = teacherManager.group(update);
+            silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
+        }, update -> update.getMessage().getText().equals("Группы"));
+   }
+
+    public Reply statistic() {
+        return Reply.of(update -> {
+            ContextAnswer contextAnswer = teacherManager.statistic(update);
+            if (contextAnswer.getButtonsList() != null) {
+                silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
+            }
+        }, update -> teacherManager.group(update).getButtonsList().contains(update.getMessage().getText()));
+    }
+
+    /*public Reply viewStudent() {
+        return Reply.of(update -> {
+            ContextAnswer contextAnswer = teacherManager.viewStudent(update);
+            silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
+        }, update -> teacherManager.group(update).getButtonsList().contains(update.getMessage().getText()));
+    }*/
+
+    /* public Reply student() {
+        return Reply.of(update -> {
+            ContextAnswer contextAnswer = teacherManager.student(update);
+            silent.execute(Keyboard.listKeyboard(contextAnswer.getList(), update, contextAnswer.getAnswer()));
+        }, update -> teacherManager.getStudent(update).getList().contains(update.getMessage().getText()));
+    }*/
 
     public Reply delAll() {
         return Reply.of(update -> {

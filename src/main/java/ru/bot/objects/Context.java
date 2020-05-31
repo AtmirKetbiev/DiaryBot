@@ -2,19 +2,19 @@ package ru.bot.objects;
 
 import java.io.Serializable;
 
-public class Status implements Serializable {
+public class Context implements Serializable {
     //private static final long serialVersionUID = 5L;
 
     private String idCourse;
     private String idTask;
-    private int idGroup;
-    private int idStudent;
+    private String idGroup;
+    private Long idStudent;
 
-    public Status() {
+    public Context() {
         this.idCourse = null;
         this.idTask = null;
-        this.idGroup = -1;
-        this.idStudent = -1;
+        this.idGroup = null;
+        this.idStudent = -1L;
     }
 
     public String getIdCourse() {
@@ -33,19 +33,19 @@ public class Status implements Serializable {
         this.idTask = idTask;
     }
 
-    public int getIdGroup() {
+    public String getIdGroup() {
         return idGroup;
     }
 
-    public void setIdGroup(int idGroup) {
+    public void setIdGroup(String idGroup) {
         this.idGroup = idGroup;
     }
 
-    public int getIdStudent() {
+    public Long getIdStudent() {
         return idStudent;
     }
 
-    public void setIdStudent(int idStudent) {
+    public void setIdStudent(Long idStudent) {
         this.idStudent = idStudent;
     }
 }

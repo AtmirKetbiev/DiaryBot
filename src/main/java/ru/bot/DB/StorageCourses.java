@@ -30,9 +30,6 @@ public class StorageCourses implements Storage <Course, String, Long> {
 
     @Override
     public void set(Course course) {
-        StorageTeacher storageTeacher = new StorageTeacher(db);
-        Teacher teacher = storageTeacher.getMap().get(course.getIdTeacher());
-
         StorageContext storageContext = new StorageContext(db);
 
         String idCourse = storageContext.get(course.getIdTeacher()).getIdCourse();
@@ -42,10 +39,9 @@ public class StorageCourses implements Storage <Course, String, Long> {
             }
             this.courseMap.put(idCourse, course);
         } else {
-            //String id = UUID.randomUUID().toString().replace("-", "");
             this.courseMap.put(course.getCode(), course);
-            teacher.addCourses(course.getCode());
-            storageTeacher.getMap().put(course.getIdTeacher(), teacher);
+            //teacher.addCourses(course.getCode());
+            //storageTeacher.getMap().put(course.getIdTeacher(), teacher);
         }
     }
 

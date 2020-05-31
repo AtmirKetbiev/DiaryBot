@@ -1,24 +1,17 @@
 package ru.bot.objects;
 
-//import com.sun.javaws.progress.Progress;
-import org.telegram.abilitybots.api.db.DBContext;
-
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
 
 public class Student implements Serializable {
     //private static final long serialVersionUID = 4L;
 
-    private String stat;
+    private String stat = "";
 
     private String name;                    // Имя студента
     private String group;                // id группы
-    private List<String> courses;    // Список с id курсов
-    private Map<Integer, Progress> progresses;
+    private List<String> courses  = new ArrayList<>();    // Список с id курсов
+    private Map<Integer, Progress> progresses = new HashMap<>();
 
     public String getStat() {
         return stat;
@@ -51,6 +44,14 @@ public class Student implements Serializable {
         this.courses = courses;
     }
 
+    public void setCourses(String courses) {
+        this.courses.add(courses);
+    }
+
+    public void removeCourse(String course) {
+        courses.remove(course);
+    }
+
     public void addProgress(Progress progress) {
         for (int i : progresses.keySet()) {
             if (progresses.get(i).getIdCourse() == (progress.getIdCourse()) && progresses.get(i).getIdTask() == (progress.getIdTask())) {
@@ -62,10 +63,30 @@ public class Student implements Serializable {
     }
 
     public Progress getProgresses(String idCourse, String idTask) {
-        for (int i : progresses.keySet()) {
-            if (progresses.get(i).getIdCourse() == idCourse && progresses.get(i).getIdTask() == idTask) {
-                return progresses.get(i);
+        if (progresses.size()==0) {
+            Progress progress = new Progress();
+            progress.setIdCourse(idCourse);
+            progress.setIdTask(idTask);
+            return progress;
+        } else {
+            for (int i : progresses.keySet()) {
+                if (progresses.get(i).getIdCourse().equals(idCourse) && progresses.get(i).getIdTask().equals(idTask)) {
+                    return progresses.get(i);
+                }
             }
+        }
+        return null;
+    }
+
+    public List<Progress> getProgresses(String idCourse) {
+        if (progresses.size()!=0) {
+            List<Progress> progressList = new ArrayList<>(0);
+            for (int i : progresses.keySet()) {
+                if (progresses.get(i).getIdCourse().equals(idCourse)) {
+                    progressList.add(progresses.get(i));
+                }
+            }
+            return progressList;
         }
         return null;
     }

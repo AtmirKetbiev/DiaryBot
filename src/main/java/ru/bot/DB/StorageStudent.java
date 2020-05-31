@@ -1,8 +1,8 @@
 package ru.bot.DB;
 
 import org.telegram.abilitybots.api.db.DBContext;
+import ru.bot.objects.Context;
 import ru.bot.objects.Student;
-import ru.bot.objects.Teacher;
 
 import java.util.Map;
 
@@ -28,6 +28,9 @@ public class StorageStudent implements StorageUser<Student, Long> {
 
     @Override
     public void set(Long id, Student student) {
+        StorageContext storageContext = new StorageContext(db);
+
+        storageContext.set(id, new Context());
         if (studentMap.get(id) == null) {
             this.studentMap.put(id, student);
         }
