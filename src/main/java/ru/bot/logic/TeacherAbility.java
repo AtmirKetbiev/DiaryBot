@@ -3,6 +3,7 @@ package ru.bot.logic;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.telegram.abilitybots.api.db.DBContext;
 import org.telegram.abilitybots.api.objects.*;
+import org.telegram.abilitybots.api.sender.MessageSender;
 import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.telegrambots.bots.DefaultAbsSender;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
@@ -22,10 +23,12 @@ import java.io.IOException;
 public class TeacherAbility implements org.telegram.abilitybots.api.util.AbilityExtension {
     private TeacherManager teacherManager;
     private SilentSender silent;
+    private MessageSender sender;
     private DBContext db;
 
-    public TeacherAbility(SilentSender silent, DBContext db) {
+    public TeacherAbility(MessageSender sender, SilentSender silent, DBContext db) {
         this.silent = silent;
+        this.sender = sender;
         this.db = db;
         this.teacherManager = new TeacherManager(db);
     }
@@ -171,22 +174,7 @@ public class TeacherAbility implements org.telegram.abilitybots.api.util.Ability
                 sendDocument.setDocument(report);
                 sendDocument.setChatId(update.getMessage().getChatId());
 
-                TelegramLongPollingBot telegramLongPollingBot = new TelegramLongPollingBot() {
-                    @Override
-                    public void onUpdateReceived(Update update) {
-                    }
-
-                    @Override
-                    public String getBotUsername() {
-                        return Constants.BOT_USERNAME;
-                    }
-
-                    @Override
-                    public String getBotToken() {
-                        return Constants.TOKEN;
-                    }
-                };
-                telegramLongPollingBot.execute(sendDocument);
+                sender.sendDocument(sendDocument);
             } catch (IOException | TelegramApiException e) {
                 e.printStackTrace();
             }
