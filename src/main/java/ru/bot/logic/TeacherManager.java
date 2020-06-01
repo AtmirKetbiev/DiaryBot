@@ -1,5 +1,6 @@
 package ru.bot.logic;
 
+import org.apache.poi.ss.usermodel.Workbook;
 import org.telegram.abilitybots.api.db.DBContext;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.bot.DB.*;
@@ -9,6 +10,8 @@ import ru.bot.view.ViewCourse;
 import ru.bot.view.ViewAnswer;
 import ru.bot.view.ViewTask;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
 
@@ -351,7 +354,7 @@ public class TeacherManager {
         return contextAnswer;
     }
 
-    public ContextAnswer statistic(Update update) {
+    public File statistic(Update update) throws IOException {
         Long id = update.getMessage().getChatId();
         String groupName = update.getMessage().getText();
         String idCourse = storageContext.get(id).getIdCourse();
@@ -360,26 +363,36 @@ public class TeacherManager {
         context.setIdGroup(groupName);
         storageContext.set(id, context);
 
+        /**имена студентов*/
         List<Long> studentList = new ArrayList<>(0);
+        List<String> studentNameList = new ArrayList<>(0);
         for (Long idStudent: storageStudent.getMap().keySet()) {
             if (storageStudent.get(idStudent).getGroup().equals(groupName)) {
                 studentList.add(idStudent);
+                studentNameList.add(storageStudent.get(idStudent).getName());
             }
         }
 
-        Map<Long, List<Progress>> progressMap = new HashMap<>();
+        /**список прогрессов*/
+        Map<String, List<Progress>> progressMap = new HashMap<>();
         for (Long idStudent: studentList) {
             List<Progress> progress = storageStudent.get(idStudent).getProgresses(idCourse);
             if (!progress.isEmpty()) {
-                progressMap.put(idStudent ,progress);
+                progressMap.put(storageStudent.get(idStudent).getName() ,progress);
             }
         }
 
-        ReportExcel reportExcel = new ReportExcel(progressMap);
-        //Workbook report = reportExcel.getReportFile();
+        /**список названий заданий*/
+        Map<String ,String> taskMap  = new HashMap<>();
+        for (String s: storageTasks.getMap().keySet()) {
+            if (storageCourses.get(idCourse).getIdTasks().contains(s)) {
+                taskMap.put(s, storageTasks.get(s).getName());
+            }
+        }
 
-        contextAnswer.setAnswer("Студенты");
-        return contextAnswer;
+        ReportExcel reportExcel = new ReportExcel();
+
+        return reportExcel.getReportFile(studentNameList, taskMap, progressMap);
     }
 
     public ContextAnswer viewStudent(Update update) {

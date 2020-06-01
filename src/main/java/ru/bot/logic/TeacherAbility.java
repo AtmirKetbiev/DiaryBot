@@ -1,11 +1,23 @@
 package ru.bot.logic;
 
+import org.apache.poi.ss.usermodel.Workbook;
 import org.telegram.abilitybots.api.db.DBContext;
 import org.telegram.abilitybots.api.objects.*;
 import org.telegram.abilitybots.api.sender.SilentSender;
+import org.telegram.telegrambots.bots.DefaultAbsSender;
+import org.telegram.telegrambots.bots.DefaultBotOptions;
+import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.bot.DB.StorageCreate;
 import ru.bot.extension.Constants;
 import ru.bot.extension.Keyboard;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 public class TeacherAbility implements org.telegram.abilitybots.api.util.AbilityExtension {
     private TeacherManager teacherManager;
@@ -152,9 +164,31 @@ public class TeacherAbility implements org.telegram.abilitybots.api.util.Ability
 
     public Reply statistic() {
         return Reply.of(update -> {
-            ContextAnswer contextAnswer = teacherManager.statistic(update);
-            if (contextAnswer.getButtonsList() != null) {
-                silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
+            try {
+                File report = teacherManager.statistic(update);
+
+                SendDocument sendDocument = new SendDocument();
+                sendDocument.setDocument(report);
+                sendDocument.setChatId(update.getMessage().getChatId());
+
+                TelegramLongPollingBot telegramLongPollingBot = new TelegramLongPollingBot() {
+                    @Override
+                    public void onUpdateReceived(Update update) {
+                    }
+
+                    @Override
+                    public String getBotUsername() {
+                        return Constants.BOT_USERNAME;
+                    }
+
+                    @Override
+                    public String getBotToken() {
+                        return Constants.TOKEN;
+                    }
+                };
+                telegramLongPollingBot.execute(sendDocument);
+            } catch (IOException | TelegramApiException e) {
+                e.printStackTrace();
             }
         }, update -> teacherManager.group(update).getButtonsList().contains(update.getMessage().getText()));
     }

@@ -75,7 +75,10 @@ public class Student implements Serializable {
                 }
             }
         }
-        return null;
+        Progress progress = new Progress();
+        progress.setIdCourse(idCourse);
+        progress.setIdTask(idTask);
+        return progress;
     }
 
     public List<Progress> getProgresses(String idCourse) {
