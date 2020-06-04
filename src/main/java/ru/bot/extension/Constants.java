@@ -7,7 +7,6 @@ public class Constants {
 
     enum answerKeyboard {
         SELECT("Select");
-
         String select;
 
         answerKeyboard(String select) {
@@ -34,6 +33,8 @@ public class Constants {
     //initialization
     public static String BOT_USERNAME = "YourDiaryBot";
     public static String TOKEN = System.getenv("BOT_TOKEN");
+    public static String TEACHER = "TEACHER";
+    public static String STUDENT = "STUDENT";
 
     //reserved buttons
     String[] keyboardWords = new String[]{

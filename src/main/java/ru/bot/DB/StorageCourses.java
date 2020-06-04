@@ -1,7 +1,5 @@
 package ru.bot.DB;
 
-import java.util.UUID;
-
 import org.telegram.abilitybots.api.db.DBContext;
 import ru.bot.objects.Course;
 import ru.bot.objects.Teacher;

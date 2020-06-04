@@ -40,7 +40,7 @@ public class ReportExcel {
             for (Progress pp: p) {
                 j++;
                 Cell cellNext2 = rowNext.createCell(j);
-                cellNext2.setCellValue(pp.isMark());
+                cellNext2.setCellValue(pp.getGrade());
             }
             i++;
         }

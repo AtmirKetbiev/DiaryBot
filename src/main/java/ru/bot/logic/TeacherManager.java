@@ -1,6 +1,5 @@
 package ru.bot.logic;
 
-import org.apache.poi.ss.usermodel.Workbook;
 import org.telegram.abilitybots.api.db.DBContext;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.bot.DB.*;
@@ -339,7 +338,7 @@ public class TeacherManager {
 
     /**...............................................................................................................*/
 
-    public ContextAnswer group(Update update) {
+    public ContextAnswer viewGroup(Update update) {
         Long id = update.getMessage().getChatId();
         contextAnswer.setButtonsList(new ArrayList<>(0));
         if (storageContext.get(id).getIdCourse()!=null) {
@@ -354,9 +353,28 @@ public class TeacherManager {
         return contextAnswer;
     }
 
+    public ContextAnswer group(Update update) {
+        Long id = update.getMessage().getChatId();
+
+        Context context = storageContext.get(id);
+        context.setIdGroup(update.getMessage().getText());
+        storageContext.set(id, context);
+
+        contextAnswer.setAnswer("1");
+        contextAnswer.setButtonsList(Arrays.asList("Статистика", "Студенты"));
+        return contextAnswer;
+    }
+
+    public List<String> getGroup(Update update) {
+        Long id = update.getMessage().getChatId();
+        Course course = storageCourses.get(storageContext.get(id).getIdCourse());
+        return course.getGroup();
+    }
+
     public File statistic(Update update) throws IOException {
         Long id = update.getMessage().getChatId();
-        String groupName = update.getMessage().getText();
+        //String groupName = update.getMessage().getText();
+        String groupName = storageContext.get(id).getIdGroup();
         String idCourse = storageContext.get(id).getIdCourse();
 
         Context context = storageContext.get(id);
@@ -397,7 +415,8 @@ public class TeacherManager {
 
     public ContextAnswer viewStudent(Update update) {
         Long id = update.getMessage().getChatId();
-        String nameGroup = update.getMessage().getText();
+        //String nameGroup = update.getMessage().getText();
+        String nameGroup = storageContext.get(id).getIdGroup();
         List<String> myArray = new ArrayList<String>(0);
 
         Context context = storageContext.get(id);
@@ -446,6 +465,52 @@ public class TeacherManager {
 
         contextAnswer.setAnswer("Выберете задание");
         contextAnswer.setButtonsList(getTask(id));
+        return contextAnswer;
+    }
+
+
+    public ContextAnswer unmark(Update update) {
+        Long id = update.getMessage().getChatId();
+        Long idStudent = storageContext.get(id).getIdStudent();
+
+        Student student = storageStudent.get(idStudent);
+        Progress progress = student.getProgresses(storageContext.get(id).getIdCourse(), storageContext.get(id).getIdTask());
+        progress.setMark(false);
+        student.addProgress(progress);
+        storageStudent.getMap().put(idStudent,student);
+
+        contextAnswer.setAnswer("Отмеченно!");
+        return contextAnswer;
+    }
+
+    public ContextAnswer grade(Update update) {
+        Long id = update.getMessage().getChatId();
+        String massage = update.getMessage().getText().replaceAll("/grade ", "");
+
+        Long idStudent = storageContext.get(id).getIdStudent();
+
+        Student student = storageStudent.get(idStudent);
+        Progress progress = student.getProgresses(storageContext.get(id).getIdCourse(), storageContext.get(id).getIdTask());
+        progress.setGrade(massage);
+        student.addProgress(progress);
+        storageStudent.getMap().put(idStudent,student);
+
+        contextAnswer.setAnswer("Оценено");
+        return contextAnswer;
+    }
+
+    public ContextAnswer commentTask(Update update) {
+        Long id = update.getMessage().getChatId();
+        Long idStudent = storageContext.get(id).getIdStudent();
+
+        Student student = storageStudent.get(idStudent);
+        Progress progress = student.getProgresses(storageContext.get(id).getIdCourse(), storageContext.get(id).getIdTask());
+        String massage = update.getMessage().getText().replaceAll("/com ", "");
+        progress.addComment(update.getMessage().getChat().getFirstName() + ": " + massage + "\n");
+        student.addProgress(progress);
+        storageStudent.getMap().put(idStudent,student);
+
+        contextAnswer.setAnswer("Ваш комментарий сохранен.");
         return contextAnswer;
     }
 

@@ -20,8 +20,6 @@ public class StudentManager {
     private StorageCourses storageCourses;
     private StorageTasks storageTasks;
     private StorageContext storageContext;
-    private StorageCreate storageCreate;
-    private DBContext db;
     private ContextAnswer contextAnswer = new ContextAnswer();
 
     public StudentManager(DBContext db) {
@@ -30,14 +28,12 @@ public class StudentManager {
         this.storageCourses = new StorageCourses(db);
         this.storageTasks = new StorageTasks(db);
         this.storageContext = new StorageContext(db);
-        this.storageCreate = new StorageCreate(db);
-        this.db = db;
     }
 
     public ContextAnswer start(Update update) {
         Long id = update.getMessage().getChatId();
         Student student = new Student();
-        student.setName("Студент");
+        student.setName("Студент" + update.getMessage().getChat().getFirstName());
         student.setGroup("1-пми");
         storageStudent.set(id, student);
         storageContext.set(id, new Context());
@@ -48,8 +44,8 @@ public class StudentManager {
             contextAnswer.setAnswer("Введите вашу группу в формате\n/group 1-пми-4");
             contextAnswer.setList(Arrays.asList("Зачем мне это?"));
         } else {*/
-            contextAnswer.setAnswer("Добро пожаловать!");
-            contextAnswer.setButtonsList(Arrays.asList("Расписание", "Курсы", "Подписаться на курс", "Помощь"));
+        contextAnswer.setAnswer("Добро пожаловать!");
+        contextAnswer.setButtonsList(Arrays.asList("Расписание", "Курсы", "Подписаться на курс", "Помощь"));
         //}
         return contextAnswer;
     }
@@ -121,11 +117,20 @@ public class StudentManager {
     public ContextAnswer course(Update update) {
         Long id = update.getMessage().getChatId();
         String text = update.getMessage().getText();
+        Student student = storageStudent.get(id);
+        String idCourse = "";
+        for (String idC: student.getCourses()) {
+            if (storageCourses.get(idC).getName().equals(text)) {
+                idCourse = idC;
+            }
+        }
+
         Context context = new Context();
-        context.setIdCourse(storageCourses.getIdByName(text, id));
+        context.setIdCourse(idCourse);
+        //context.setIdCourse(storageCourses.getIdByName(text, id));
         storageContext.set(id, context);
         ViewCourse view = new ViewCourse();
-        contextAnswer.setAnswer(view.make(storageCourses.get(context.getIdCourse())));
+        contextAnswer.setAnswer(view.make(storageCourses.get(idCourse)));
         contextAnswer.setButtonsList(Arrays.asList("Задания", "Ссылки", "Отписаться"));
         return contextAnswer;
     }
@@ -202,8 +207,8 @@ public class StudentManager {
         Long id = update.getMessage().getChatId();
         Student student = storageStudent.get(id);
         Progress progress = student.getProgresses(storageContext.get(id).getIdCourse(), storageContext.get(id).getIdTask());
-        String massage = update.getMessage().getText().replaceAll("/add ", "");
-        progress.addComment(update.getMessage().getChat().getFirstName() + ": " + massage + "\n");
+        String massage = update.getMessage().getText().replaceAll("/com ", "");
+        progress.addComment("Студент" + update.getMessage().getChat().getFirstName() + ": " + massage + "\n");
         student.addProgress(progress);
         storageStudent.getMap().put(id,student);
         contextAnswer.setAnswer("Ваш комментарий сохранен.");
