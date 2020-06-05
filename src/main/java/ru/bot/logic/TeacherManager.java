@@ -341,13 +341,16 @@ public class TeacherManager {
     public ContextAnswer viewGroup(Update update) {
         Long id = update.getMessage().getChatId();
         contextAnswer.setButtonsList(new ArrayList<>(0));
+        if (storageContext.getMap().size()==0) {
+            return contextAnswer;
+        }
         if (storageContext.get(id).getIdCourse()!=null) {
             Course course = storageCourses.get(storageContext.get(id).getIdCourse());
             contextAnswer.setAnswer("Группы");
-            if (course.getGroup() == null) {
+            if (course.getGroups() == null) {
                 contextAnswer.setButtonsList(new ArrayList<>(0));
             } else {
-                contextAnswer.setButtonsList(course.getGroup());
+                contextAnswer.setButtonsList(course.getGroups());
             }
         }
         return contextAnswer;
@@ -368,7 +371,7 @@ public class TeacherManager {
     public List<String> getGroup(Update update) {
         Long id = update.getMessage().getChatId();
         Course course = storageCourses.get(storageContext.get(id).getIdCourse());
-        return course.getGroup();
+        return course.getGroups();
     }
 
     public File statistic(Update update) throws IOException {

@@ -33,8 +33,8 @@ public class Constants {
     //initialization
     public static String BOT_USERNAME = "YourDiaryBot";
     public static String TOKEN = System.getenv("BOT_TOKEN");
-    public static String TEACHER = "TEACHER";
-    public static String STUDENT = "STUDENT";
+    public static String TEACHER = "Преподаватель";
+    public static String STUDENT = "Студент";
 
     //reserved buttons
     String[] keyboardWords = new String[]{

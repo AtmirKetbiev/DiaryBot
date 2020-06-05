@@ -40,9 +40,9 @@ public class StartAbility implements AbilityExtension {
             Long id = update.getMessage().getChatId();
             String text = update.getMessage().getText();
 
-            if (text.equals("Преподаватель")) {
+            if (text.equals(Constants.TEACHER)) {
                 userStatus.setUserStatus(id, Constants.TEACHER);
-            } else if (text.equals("Студент")) {
+            } else if (text.equals(Constants.STUDENT)) {
                 userStatus.setUserStatus(id, Constants.STUDENT);
             }
         }, Flag.TEXT);

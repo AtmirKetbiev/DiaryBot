@@ -142,7 +142,10 @@ public class StudentManager {
         return contextAnswer;
     }
 
-    public ContextAnswer addCourse(Long idStudent, String idCourse) {
+    public ContextAnswer addCourse(Update update) {
+        Long idStudent = update.getMessage().getChatId();
+        String idCourse = update.getMessage().getText().replaceAll("/add ", "");
+
         Student student = storageStudent.get(idStudent);
         student.setCourses(idCourse);
         storageStudent.getMap().put(idStudent,student);
@@ -227,34 +230,4 @@ public class StudentManager {
         return contextAnswer;
     }
 
-    public ContextAnswer commentTask2(Update update) {
-        Long id = update.getMessage().getChatId();
-        Student student = storageStudent.get(id);
-        student.setStat("КОММЕНТ");
-        storageStudent.getMap().put(id,student);
-        //storageStudent.set(id, student);
-        contextAnswer.setAnswer("Введите ваш комментарий");
-        contextAnswer.setButtonsList(null);
-        return contextAnswer;
-    }
-
-    public ContextAnswer addCommentTask(Update update) {
-            Long id = update.getMessage().getChatId();
-            Student student = storageStudent.get(id);
-        //student.setStat("");
-        //storageStudent.getMap().put(id,student);
-            if (student.getStat().equals("КОММЕНТ")) {
-                Progress progress = student.getProgresses(storageContext.get(id).getIdCourse(), storageContext.get(id).getIdTask());
-                progress.addComment(update.getMessage().getText());
-                student.addProgress(progress);
-                student.setStat("");
-                storageStudent.set(id, student);
-                contextAnswer.setAnswer("Комментарий сохранен!");
-                contextAnswer.setButtonsList(null);
-            } else {
-                contextAnswer.setAnswer("");
-                contextAnswer.setButtonsList(null);
-            }
-            return contextAnswer;
-    }
 }

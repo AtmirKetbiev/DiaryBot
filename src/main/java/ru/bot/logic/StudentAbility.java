@@ -22,8 +22,7 @@ public class StudentAbility implements org.telegram.abilitybots.api.util.Ability
         return Reply.of(update -> {
             ContextAnswer contextAnswer = studentManager.start(update);
             silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
-        }, update -> userStatus.getUserStatus(update.getMessage().getChatId())!=null &&
-                update.getMessage().getText().equals("Студент") &&
+        }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
                 userStatus.getUserStatus(update.getMessage().getChatId()).equals(Constants.STUDENT));
     }
 
@@ -31,47 +30,49 @@ public class StudentAbility implements org.telegram.abilitybots.api.util.Ability
         return Reply.of(update -> {
             ContextAnswer contextAnswer = studentManager.back(update);
             silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
-        }, update -> update.getMessage().getText().equals("Назад") &&
-                userStatus.getUserStatus(update.getMessage().getChatId()).equals(Constants.STUDENT));
+        }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
+                update.getMessage().getText().equals("Назад"));
     }
 
     public Reply timetable() {
         return Reply.of(update -> {
             silent.send(studentManager.timetable(update).getAnswer(), update.getMessage().getChatId());
-        }, update -> update.getMessage().getText().equals("Расписание") &&
-                userStatus.getUserStatus(update.getMessage().getChatId()).equals(Constants.STUDENT));
+        }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
+                update.getMessage().getText().equals("Расписание"));
     }
 
     /**...............................................................................................................*/
 
     public Reply course() {
         return Reply.of(update -> {
-            silent.execute(Keyboard.listKeyboard(studentManager.course(update).getButtonsList(), update, studentManager.course(update).getAnswer()));
-        }, update -> studentManager.getCourse(update.getMessage().getChatId()).contains(update.getMessage().getText()) &&
-                userStatus.getUserStatus(update.getMessage().getChatId()).equals(Constants.STUDENT));
+            ContextAnswer contextAnswer = studentManager.course(update);
+            silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
+        }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
+                studentManager.getCourse(update.getMessage().getChatId()).contains(update.getMessage().getText()));
     }
 
     public Reply viewCourse() {
         return Reply.of(update -> {
-            silent.execute(Keyboard.listKeyboard(studentManager.viewCourse(update).getButtonsList(), update, studentManager.viewCourse(update).getAnswer()));
-        }, update -> update.getMessage().getText().equals("Курсы") &&
-                userStatus.getUserStatus(update.getMessage().getChatId()).equals(Constants.STUDENT));
+            ContextAnswer contextAnswer = studentManager.viewCourse(update);
+            silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
+        }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
+                update.getMessage().getText().equals("Курсы"));
     }
 
     public Reply addCourse() {
         return Reply.of(update -> {
-            String massage = update.getMessage().getText().replaceAll("/add ", "");
-            silent.send(studentManager.addCourse(update.getMessage().getChatId(), massage).getAnswer(), update.getMessage().getChatId());
-            }, update -> update.getMessage().getText().startsWith("/add") &&
-                userStatus.getUserStatus(update.getMessage().getChatId()).equals(Constants.STUDENT));
+            ContextAnswer contextAnswer = studentManager.addCourse(update);
+            silent.send(contextAnswer.getAnswer(), update.getMessage().getChatId());
+            }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
+                update.getMessage().getText().startsWith("/add"));
     }
 
     public Reply delCourse() {
         return Reply.of(update -> {
             ContextAnswer contextAnswer = studentManager.delCourse(update);
             silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
-        }, update -> update.getMessage().getText().equals("Отписаться") &&
-                userStatus.getUserStatus(update.getMessage().getChatId()).equals(Constants.STUDENT));
+        }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
+                update.getMessage().getText().equals("Отписаться"));
     }
 
     /**...............................................................................................................*/
@@ -79,55 +80,42 @@ public class StudentAbility implements org.telegram.abilitybots.api.util.Ability
     public Reply task() {
         return Reply.of(update -> {
             if (studentManager.getTask(update.getMessage().getChatId()).contains(update.getMessage().getText())) {
-                silent.execute(Keyboard.listKeyboard(studentManager.task(update).getButtonsList(), update, studentManager.task(update).getAnswer()));
+                ContextAnswer contextAnswer = studentManager.task(update);
+                silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
                 silent.send("Чтобы написать комментарий к заданию напишите текст в форме:" +
                         "/com Ваш текст", update.getMessage().getChatId());
             }
-        }, update -> userStatus.getUserStatus(update.getMessage().getChatId())!=null &&
-                userStatus.getUserStatus(update.getMessage().getChatId()).equals(Constants.STUDENT) &&
+        }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
                 studentManager.getTask(update.getMessage().getChatId()).contains(update.getMessage().getText()));
     }
 
     public Reply viewTask() {
         return Reply.of(update -> {
-            silent.execute(Keyboard.listKeyboard(studentManager.viewTask(update).getButtonsList(), update, studentManager.viewTask(update).getAnswer()));
-        }, update -> update.getMessage().getText().equals("Задания") &&
-                userStatus.getUserStatus(update.getMessage().getChatId()).equals(Constants.STUDENT));
+            ContextAnswer contextAnswer = studentManager.viewTask(update);
+            silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
+        }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
+                update.getMessage().getText().equals("Задания"));
     }
 
     public Reply markTask() {
         return Reply.of(update -> {
             silent.send(studentManager.markTask(update).getAnswer(), update.getMessage().getChatId());
-        }, update -> update.getMessage().getText().equals("Отметить как сделанное") &&
-                userStatus.getUserStatus(update.getMessage().getChatId()).equals(Constants.STUDENT));
+        }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
+                update.getMessage().getText().equals("Отметить как сделанное"));
     }
 
     public Reply commentTask() {
         return Reply.of(update -> {
-            String massage = update.getMessage().getText().replaceAll("/com ", "");
             silent.send(studentManager.commentTask(update).getAnswer(), update.getMessage().getChatId());
-        }, update -> update.getMessage().getText().startsWith("/com") &&
-                userStatus.getUserStatus(update.getMessage().getChatId()).equals(Constants.STUDENT));
+        }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
+                update.getMessage().getText().startsWith("/com"));
     }
 
     public Reply viewComment() {
         return Reply.of(update -> {
             silent.send(studentManager.viewComment(update).getAnswer(), update.getMessage().getChatId());
-        }, update -> update.getMessage().getText().startsWith("История комментариев") &&
-                userStatus.getUserStatus(update.getMessage().getChatId()).equals(Constants.STUDENT));
+        }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
+                update.getMessage().getText().startsWith("История комментариев"));
     }
 
-    /*public Reply commentTask2() {
-        return Reply.of(update -> {
-            silent.send(studentManager.commentTask(update).getAnswer(), update.getMessage().getChatId());
-        }, update -> update.getMessage().getText().equals("Добавить комментарий"));
-    }
-
-    public Reply addCommentTask() {
-        return Reply.of(update -> {
-            if (!studentManager.addCommentTask(update).getAnswer().equals("")) {
-                silent.send(studentManager.addCommentTask(update).getAnswer(), update.getMessage().getChatId());
-            }
-        }, Flag.TEXT);
-    }*/
 }

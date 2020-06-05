@@ -33,13 +33,11 @@ public class StorageCourses implements Storage <Course, String, Long> {
         String idCourse = storageContext.get(course.getIdTeacher()).getIdCourse();
         if (idCourse != null) {
             if (storageContext.get(course.getIdTeacher()).getIdTask() == null) {
-                course.setIdTasks(this.courseMap.get(idCourse).getIdTasks());
+                course.setIdTask(this.courseMap.get(idCourse).getIdTasks());
             }
             this.courseMap.put(idCourse, course);
         } else {
             this.courseMap.put(course.getCode(), course);
-            //teacher.addCourses(course.getCode());
-            //storageTeacher.getMap().put(course.getIdTeacher(), teacher);
         }
     }
 

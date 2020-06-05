@@ -40,7 +40,7 @@ public class StorageTasks implements Storage<Task, String, String> {
         } else {
             String id = UUID.randomUUID().toString().replace("-", "");
             this.taskMap.put(id, task);
-            course.setIdTasks(id);
+            course.setIdTask(id);
             storageCourses.getMap().put(task.getIdCourse(), course);
         }
     }
