@@ -7,11 +7,19 @@ import java.util.Date;
 
 public class Task implements Serializable {
 
+    private String code;
     private String idCourse;
     private String name;
     private String description;
     private Date soft;
     private Date hard;
+
+    public String getCode() {
+        return code;
+    }
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public String getIdCourse() {
         return idCourse;
@@ -52,7 +60,6 @@ public class Task implements Serializable {
         if (name == null)  return false;
         if (description == null)  return false;
         if (soft == null)  return false;
-        if (hard == null)  return false;
-        return true;
+        return hard != null;
     }
 }

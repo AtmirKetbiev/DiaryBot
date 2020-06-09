@@ -14,6 +14,8 @@ public class Keyboard {
 
     public static SendMessage listKeyboard(List<String> text, Update update, String answer) {
         SendMessage sendMessage = new SendMessage().setChatId(update.getMessage().getChatId());
+        sendMessage.setText("Пусто");
+
         ArrayList<KeyboardRow> keyboard = new ArrayList<>();
         KeyboardRow keyboardRow = new KeyboardRow();
 
@@ -26,11 +28,15 @@ public class Keyboard {
             keyboard.add(keyboardRow);
             keyboardRow = new KeyboardRow();
         }
-        keyboardRow.add("Назад");
-        keyboard.add(keyboardRow);
+
+        if (!text.isEmpty()) {
+            keyboardRow.add("Назад");
+            keyboard.add(keyboardRow);
+            sendMessage.setText(answer);
+        }
 
         replyKeyboardMarkup.setKeyboard(keyboard);
-        sendMessage.setText(answer);
+
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         return sendMessage;
     }
@@ -38,7 +44,7 @@ public class Keyboard {
     public static SendMessage constantKeyboard(String[][] text, Update update, String answer) {
         SendMessage sendMessage = new SendMessage().setChatId(update.getMessage().getChatId());
         ArrayList<KeyboardRow> keyboard = new ArrayList<>();
-        KeyboardRow keyboardRow = new KeyboardRow();
+        KeyboardRow keyboardRow;
 
         replyKeyboardMarkup.setSelective(true);
         replyKeyboardMarkup.setResizeKeyboard(true);
@@ -51,9 +57,12 @@ public class Keyboard {
             }
             keyboard.add(keyboardRow);
         }
-        keyboardRow = new KeyboardRow();
-        keyboardRow.add("Назад");
-        keyboard.add(keyboardRow);
+
+        if (!text[0][0].equals("Добавить курс")) {
+            keyboardRow = new KeyboardRow();
+            keyboardRow.add("Назад");
+            keyboard.add(keyboardRow);
+        }
 
         replyKeyboardMarkup.setKeyboard(keyboard);
         sendMessage.setText(answer);

@@ -1,9 +1,6 @@
-package ru.bot.DB;
-
-import java.util.Map;
+package ru.bot.db;
 
 public interface StorageUser<T, X> {
-    Map<X, T> getMap();
     T get(X x);
     void set(X x, T t);
 }

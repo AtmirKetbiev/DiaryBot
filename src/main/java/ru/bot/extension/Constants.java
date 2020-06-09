@@ -1,23 +1,8 @@
 package ru.bot.extension;
 
 import java.util.Calendar;
-import java.util.Map;
 
 public class Constants {
-
-    enum answerKeyboard {
-        SELECT("Select");
-        String select;
-
-        answerKeyboard(String select) {
-            this.select = select;
-        }
-
-        @Override
-        public String toString() {
-            return select;
-        }
-    }
 
     //keyboard
     public static String[][] startKeyboardTeacher = {{"Добавить курс", "Посмотреть курсы"},

@@ -3,32 +3,48 @@ package ru.bot.logic;
 import org.telegram.abilitybots.api.db.DBContext;
 import org.telegram.abilitybots.api.objects.*;
 import org.telegram.abilitybots.api.sender.SilentSender;
-import ru.bot.DB.UserStatus;
+import ru.bot.db.*;
 import ru.bot.extension.Constants;
 import ru.bot.extension.Keyboard;
 
 public class StudentAbility implements org.telegram.abilitybots.api.util.AbilityExtension {
+
     private StudentManager studentManager;
     private UserStatus userStatus;
     private SilentSender silent;
+    private Long id;
+    private String text;
 
-    public StudentAbility(SilentSender silent, DBContext db) {
+    private ContextAnswer contextAnswer = new ContextAnswer();
+
+    public StudentAbility(SilentSender silent,
+                          DBContext db) {
+        StorageStudent storageStudent = new StorageStudent(db);
+        StorageCourses storageCourses = new StorageCourses(db);
+        StorageTasks storageTasks = new StorageTasks(db);
+        StorageContext storageContext = new StorageContext(db);
         this.silent = silent;
-        this.studentManager = new StudentManager(db);
+        this.studentManager = new StudentManager(storageStudent, storageCourses, storageTasks, storageContext);
         this.userStatus = new UserStatus(db);
     }
 
     public Reply start() {
         return Reply.of(update -> {
-            ContextAnswer contextAnswer = studentManager.start(update);
+            id = update.getMessage().getChatId();
+            String name =  update.getMessage().getChat().getFirstName();
+
+            contextAnswer = studentManager.start(id, name);
             silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
         }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
-                userStatus.getUserStatus(update.getMessage().getChatId()).equals(Constants.STUDENT));
+                update.getMessage().getText().equals(Constants.STUDENT));
     }
 
     public Reply back() {
         return Reply.of(update -> {
-            ContextAnswer contextAnswer = studentManager.back(update);
+            id = update.getMessage().getChatId();
+            text = update.getMessage().getText();
+
+            contextAnswer = studentManager.back(id);
             silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
         }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
                 update.getMessage().getText().equals("Назад"));
@@ -36,7 +52,10 @@ public class StudentAbility implements org.telegram.abilitybots.api.util.Ability
 
     public Reply timetable() {
         return Reply.of(update -> {
-            silent.send(studentManager.timetable(update).getAnswer(), update.getMessage().getChatId());
+            id = update.getMessage().getChatId();
+            text = update.getMessage().getText();
+
+            silent.send(studentManager.timetable().getAnswer(), update.getMessage().getChatId());
         }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
                 update.getMessage().getText().equals("Расписание"));
     }
@@ -45,7 +64,10 @@ public class StudentAbility implements org.telegram.abilitybots.api.util.Ability
 
     public Reply course() {
         return Reply.of(update -> {
-            ContextAnswer contextAnswer = studentManager.course(update);
+            id = update.getMessage().getChatId();
+            text = update.getMessage().getText();
+
+            contextAnswer = studentManager.course(id, text);
             silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
         }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
                 studentManager.getCourse(update.getMessage().getChatId()).contains(update.getMessage().getText()));
@@ -53,7 +75,10 @@ public class StudentAbility implements org.telegram.abilitybots.api.util.Ability
 
     public Reply viewCourse() {
         return Reply.of(update -> {
-            ContextAnswer contextAnswer = studentManager.viewCourse(update);
+            id = update.getMessage().getChatId();
+            text = update.getMessage().getText();
+
+            contextAnswer = studentManager.viewCourse(id);
             silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
         }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
                 update.getMessage().getText().equals("Курсы"));
@@ -61,7 +86,10 @@ public class StudentAbility implements org.telegram.abilitybots.api.util.Ability
 
     public Reply addCourse() {
         return Reply.of(update -> {
-            ContextAnswer contextAnswer = studentManager.addCourse(update);
+            id = update.getMessage().getChatId();
+            text = update.getMessage().getText();
+
+            contextAnswer = studentManager.addCourse(id, text);
             silent.send(contextAnswer.getAnswer(), update.getMessage().getChatId());
             }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
                 update.getMessage().getText().startsWith("/add"));
@@ -69,7 +97,10 @@ public class StudentAbility implements org.telegram.abilitybots.api.util.Ability
 
     public Reply delCourse() {
         return Reply.of(update -> {
-            ContextAnswer contextAnswer = studentManager.delCourse(update);
+            id = update.getMessage().getChatId();
+            text = update.getMessage().getText();
+
+            contextAnswer = studentManager.delCourse(id);
             silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
         }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
                 update.getMessage().getText().equals("Отписаться"));
@@ -79,8 +110,11 @@ public class StudentAbility implements org.telegram.abilitybots.api.util.Ability
 
     public Reply task() {
         return Reply.of(update -> {
+            id = update.getMessage().getChatId();
+            text = update.getMessage().getText();
+
             if (studentManager.getTask(update.getMessage().getChatId()).contains(update.getMessage().getText())) {
-                ContextAnswer contextAnswer = studentManager.task(update);
+                contextAnswer = studentManager.task(id, text);
                 silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
                 silent.send("Чтобы написать комментарий к заданию напишите текст в форме:" +
                         "/com Ваш текст", update.getMessage().getChatId());
@@ -91,7 +125,10 @@ public class StudentAbility implements org.telegram.abilitybots.api.util.Ability
 
     public Reply viewTask() {
         return Reply.of(update -> {
-            ContextAnswer contextAnswer = studentManager.viewTask(update);
+            id = update.getMessage().getChatId();
+            text = update.getMessage().getText();
+
+            contextAnswer = studentManager.viewTask(id);
             silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
         }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
                 update.getMessage().getText().equals("Задания"));
@@ -99,21 +136,30 @@ public class StudentAbility implements org.telegram.abilitybots.api.util.Ability
 
     public Reply markTask() {
         return Reply.of(update -> {
-            silent.send(studentManager.markTask(update).getAnswer(), update.getMessage().getChatId());
+            id = update.getMessage().getChatId();
+            text = update.getMessage().getText();
+
+            silent.send(studentManager.markTask(id).getAnswer(), update.getMessage().getChatId());
         }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
                 update.getMessage().getText().equals("Отметить как сделанное"));
     }
 
     public Reply commentTask() {
         return Reply.of(update -> {
-            silent.send(studentManager.commentTask(update).getAnswer(), update.getMessage().getChatId());
+            id = update.getMessage().getChatId();
+            text = update.getMessage().getText();
+
+            silent.send(studentManager.commentTask(id, text).getAnswer(), update.getMessage().getChatId());
         }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
                 update.getMessage().getText().startsWith("/com"));
     }
 
     public Reply viewComment() {
         return Reply.of(update -> {
-            silent.send(studentManager.viewComment(update).getAnswer(), update.getMessage().getChatId());
+            id = update.getMessage().getChatId();
+            text = update.getMessage().getText();
+
+            silent.send(studentManager.viewComment(id).getAnswer(), update.getMessage().getChatId());
         }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
                 update.getMessage().getText().startsWith("История комментариев"));
     }

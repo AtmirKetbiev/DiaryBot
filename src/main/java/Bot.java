@@ -1,13 +1,15 @@
 import org.telegram.abilitybots.api.bot.AbilityBot;
-import org.telegram.abilitybots.api.db.DBContext;
 import org.telegram.abilitybots.api.util.AbilityExtension;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
+import ru.bot.db.*;
 import ru.bot.extension.Constants;
 import ru.bot.logic.StartAbility;
 import ru.bot.logic.StudentAbility;
 import ru.bot.logic.TeacherAbility;
 
 public class Bot extends AbilityBot {
+
+    private UserStatus userStatus = new UserStatus(db);
 
     Bot(DefaultBotOptions botOptions) {
         super(Constants.TOKEN, Constants.BOT_USERNAME, botOptions);

@@ -39,7 +39,7 @@ public class Student implements Serializable {
 
     public void addProgress(Progress progress) {
         for (int i : progresses.keySet()) {
-            if (progresses.get(i).getIdCourse() == (progress.getIdCourse()) && progresses.get(i).getIdTask() == (progress.getIdTask())) {
+            if (progresses.get(i).getIdCourse().equals(progress.getIdCourse()) && progresses.get(i).getIdTask().equals(progress.getIdTask())) {
                 progresses.put(i, progress);
                 return;
             }

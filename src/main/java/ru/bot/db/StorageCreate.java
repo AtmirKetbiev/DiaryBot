@@ -1,23 +1,17 @@
-package ru.bot.DB;
+package ru.bot.db;
 
 import org.telegram.abilitybots.api.db.DBContext;
 import ru.bot.objects.Course;
-import ru.bot.objects.Student;
 import ru.bot.objects.Task;
-import ru.bot.objects.Teacher;
 
 import java.util.Map;
 
 public class StorageCreate {
 
-    private Map<Long, Teacher> createTeacher;
-    private Map<Long, Student> createStudent;
     private Map<Long, Course> createCourse;
     private Map<Long, Task> createTask;
 
     public StorageCreate(DBContext db) {
-        this.createTeacher = db.getMap("createTeacher");
-        this.createStudent = db.getMap("createStudent");
         this.createCourse = db.getMap("createCourse");
         this.createTask = db.getMap("createTask");
     }
@@ -25,10 +19,6 @@ public class StorageCreate {
     /** Создание курса................................................................................................*/
     public Map<Long, Course> getCreateCourse() {
         return createCourse;
-    }
-
-    public Course getCourse(Long id) {
-        return createCourse.get(id);
     }
 
     public void setCreateCourse(Course course) {

@@ -23,7 +23,9 @@ public class Teacher implements Serializable {
         this.courses = courses;
     }
     public void addCourses(String id) {
+        if (!courses.contains(id)) {
             courses.add(id);
+        }
     }
     public void removeCourse(String id) {
         courses.remove(courses.indexOf(id));

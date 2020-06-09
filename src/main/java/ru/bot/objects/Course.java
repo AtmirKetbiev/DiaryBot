@@ -13,6 +13,7 @@ public class Course implements Serializable {
     private List<String> tasks = new ArrayList<>();
     private List<String> groups = new ArrayList<>();
     private List<String> links = new ArrayList<>();
+    private List<Long> students = new ArrayList<>();
 
     public String getCode() {
         return code;
@@ -46,7 +47,10 @@ public class Course implements Serializable {
         return tasks;
     }
     public void setIdTask(String idTask) {
+        if (!tasks.contains(idTask)) {
             tasks.add(idTask);
+        }
+
     }
     public void setIdTask(List<String> task) {
         this.tasks = task;
@@ -56,7 +60,9 @@ public class Course implements Serializable {
     }
 
     public void addGroup(String str) {
+        if (!groups.contains(str)) {
             groups.add(str);
+        }
     }
     public List<String> getGroups() {
         return groups;
@@ -72,11 +78,22 @@ public class Course implements Serializable {
         links.add(link);
     }
 
+    public List<Long> getStudents() {
+        return students;
+    }
+    public void setStudents(Long idStudents) {
+        if (!groups.contains(idStudents)) {
+            this.students.add(idStudents);
+        }
+    }
+    public void removeStudents(Long idStudents) {
+        this.students.remove(idStudents);
+    }
+
     public boolean check() {
         if (name == null)  return false;
         if (description == null)  return false;
-        //if (idTasks == null)  return false;
-        return true;
+        return tasks != null;
     }
 
 }

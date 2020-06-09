@@ -2,7 +2,7 @@ package ru.bot.view;
 
 import ru.bot.objects.Course;
 
-public class ViewCourse implements StringMaker<String, Course> {
+public class ViewCourse implements StringMaker<Course> {
 
     @Override
     public String make(Course course) {

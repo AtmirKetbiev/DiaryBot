@@ -1,4 +1,4 @@
-package ru.bot.DB;
+package ru.bot.db;
 
 import org.telegram.abilitybots.api.db.DBContext;
 import ru.bot.objects.Context;
@@ -11,15 +11,6 @@ public class StorageContext implements StorageUser<Context, Long> {
 
     public StorageContext(DBContext db) {
         this.userContext = db.getMap("userContext");
-    }
-
-    public void contextNull(Long id) {
-        this.userContext.put(id, new Context());
-    }
-
-    @Override
-    public Map<Long, Context> getMap() {
-        return userContext;
     }
 
     @Override

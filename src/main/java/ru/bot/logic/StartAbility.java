@@ -5,7 +5,7 @@ import org.telegram.abilitybots.api.objects.Flag;
 import org.telegram.abilitybots.api.objects.Reply;
 import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.abilitybots.api.util.AbilityExtension;
-import ru.bot.DB.UserStatus;
+import ru.bot.db.UserStatus;
 import ru.bot.extension.Constants;
 import ru.bot.extension.Keyboard;
 
