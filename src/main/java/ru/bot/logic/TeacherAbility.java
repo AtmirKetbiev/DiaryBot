@@ -1,6 +1,5 @@
 package ru.bot.logic;
 
-import org.telegram.abilitybots.api.db.DBContext;
 import org.telegram.abilitybots.api.objects.*;
 import org.telegram.abilitybots.api.sender.MessageSender;
 import org.telegram.abilitybots.api.sender.SilentSender;
@@ -29,18 +28,20 @@ public class TeacherAbility implements AbilityExtension {
 
     public TeacherAbility(MessageSender sender,
                           SilentSender silent,
-                          DBContext db) {
-        StorageTeacher storageTeacher = new StorageTeacher(db);
-        StorageStudent storageStudent = new StorageStudent(db);
-        StorageCourses storageCourses = new StorageCourses(db);
-        StorageTasks storageTasks = new StorageTasks(db);
-        StorageContext storageContext = new StorageContext(db);
-        this.storageCreate = new StorageCreate(db);
+                          StorageTeacher storageTeacher,
+                          StorageStudent storageStudent,
+                          StorageCourses storageCourses,
+                          StorageTasks storageTasks,
+                          StorageProgress storageProgress,
+                          StorageContext storageContext,
+                          StorageCreate storageCreate,
+                          UserStatus userStatus) {
+        this.storageCreate = storageCreate;
 
         this.silent = silent;
         this.sender = sender;
-        this.teacherManager = new TeacherManager(storageTeacher, storageStudent, storageCourses, storageTasks, storageContext, storageCreate);
-        this.userStatus = new UserStatus(db);
+        this.userStatus = userStatus;
+        this.teacherManager = new TeacherManager(storageTeacher, storageStudent, storageCourses, storageTasks, storageProgress, storageContext, storageCreate);
     }
 
     /**Старт..........................................................................................................*/

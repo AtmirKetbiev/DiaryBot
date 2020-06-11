@@ -18,6 +18,7 @@ public class TeacherManager {
     private StorageStudent storageStudent;
     private StorageCourses storageCourses;
     private StorageTasks storageTasks;
+    private StorageProgress storageProgress;
     private StorageContext storageContext;
     private StorageCreate storageCreate;
     private ContextAnswer contextAnswer = new ContextAnswer();
@@ -26,12 +27,14 @@ public class TeacherManager {
                           StorageStudent storageStudent,
                           StorageCourses storageCourses,
                           StorageTasks storageTasks,
+                          StorageProgress storageProgress,
                           StorageContext storageContext,
                           StorageCreate storageCreate) {
         this.storageTeacher = storageTeacher;
         this.storageStudent = storageStudent;
         this.storageCourses = storageCourses;
         this.storageTasks = storageTasks;
+        this.storageProgress = storageProgress;
         this.storageContext = storageContext;
         this.storageCreate = storageCreate;
     }
@@ -382,11 +385,12 @@ public class TeacherManager {
         }
 
         /**список прогрессов*/
-        Map<String, List<Progress>> progressMap = new HashMap<>();
+        List<String> progressMap = new  ArrayList<>();
         for (Long idStudent: studentList) {
-            List<Progress> progress = storageStudent.get(idStudent).getProgresses(idCourse);
+            List<String> progress = storageStudent.get(idStudent).getProgresses(idCourse);
+            //List<Progress> progress = storageStudent.get(idStudent).getProgresses(idCourse);
             if (!(progress ==null)) {
-                progressMap.put(storageStudent.get(idStudent).getName() ,progress);
+                progressMap.addAll(progress);
             }
         }
 
@@ -456,11 +460,10 @@ public class TeacherManager {
     public ContextAnswer unmark(Long id) {
         Long idStudent = storageContext.get(id).getIdStudent();
 
-        Student student = storageStudent.get(idStudent);
-        Progress progress = student.getProgresses(storageContext.get(id).getIdCourse(), storageContext.get(id).getIdTask());
+        String idProgress = storageProgress.getId(idStudent, storageContext.get(id).getIdCourse(), storageContext.get(id).getIdTask());
+        Progress progress = storageProgress.get(idProgress);
         progress.setMark(false);
-        student.addProgress(progress);
-        storageStudent.set(idStudent,student);
+        storageProgress.set(progress);
 
         contextAnswer.setAnswer("Отмеченно!");
         return contextAnswer;
@@ -468,14 +471,12 @@ public class TeacherManager {
 
     public ContextAnswer grade(Long id, String text) {
         String massage = text.replaceAll("/grade ", "");
-
         Long idStudent = storageContext.get(id).getIdStudent();
 
-        Student student = storageStudent.get(idStudent);
-        Progress progress = student.getProgresses(storageContext.get(id).getIdCourse(), storageContext.get(id).getIdTask());
+        String idProgress = storageProgress.getId(idStudent, storageContext.get(id).getIdCourse(), storageContext.get(id).getIdTask());
+        Progress progress = storageProgress.get(idProgress);
         progress.setGrade(massage);
-        student.addProgress(progress);
-        storageStudent.set(idStudent,student);
+        storageProgress.set(progress);
 
         contextAnswer.setAnswer("Оценено");
         return contextAnswer;
@@ -484,12 +485,12 @@ public class TeacherManager {
     public ContextAnswer commentTask(Long id, String text) {
         Long idStudent = storageContext.get(id).getIdStudent();
 
-        Student student = storageStudent.get(idStudent);
-        Progress progress = student.getProgresses(storageContext.get(id).getIdCourse(), storageContext.get(id).getIdTask());
+        String idProgress = storageProgress.getId(idStudent, storageContext.get(id).getIdCourse(), storageContext.get(id).getIdTask());
+        Progress progress = storageProgress.get(idProgress);
+
         String massage = text.replaceAll("/com ", "");
-        progress.addComment(storageTeacher.get(id).getName() + ": " + massage + "\n");
-        student.addProgress(progress);
-        storageStudent.set(idStudent,student);
+        progress.setComment(storageTeacher.get(id).getName() + ": " + massage + "\n");
+        storageProgress.set(progress);
 
         contextAnswer.setAnswer("Ваш комментарий сохранен.");
         return contextAnswer;

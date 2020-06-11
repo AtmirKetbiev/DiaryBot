@@ -17,9 +17,9 @@ public class StartAbility implements AbilityExtension {
     private UserStatus userStatus;
     private ContextAnswer contextAnswer = new ContextAnswer();
 
-    public StartAbility(SilentSender silent, DBContext db) {
+    public StartAbility(SilentSender silent, UserStatus userStatus) {
         this.silent = silent;
-        this.userStatus = new UserStatus(db);
+        this.userStatus = userStatus;
     }
 
     public Reply start() {

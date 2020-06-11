@@ -18,14 +18,15 @@ public class StudentAbility implements org.telegram.abilitybots.api.util.Ability
     private ContextAnswer contextAnswer = new ContextAnswer();
 
     public StudentAbility(SilentSender silent,
-                          DBContext db) {
-        StorageStudent storageStudent = new StorageStudent(db);
-        StorageCourses storageCourses = new StorageCourses(db);
-        StorageTasks storageTasks = new StorageTasks(db);
-        StorageContext storageContext = new StorageContext(db);
+                          StorageStudent storageStudent,
+                          StorageCourses storageCourses,
+                          StorageTasks storageTasks,
+                          StorageProgress storageProgress,
+                          StorageContext storageContext,
+                          UserStatus userStatus) {
         this.silent = silent;
-        this.studentManager = new StudentManager(storageStudent, storageCourses, storageTasks, storageContext);
-        this.userStatus = new UserStatus(db);
+        this.userStatus = userStatus;
+        this.studentManager = new StudentManager(storageStudent, storageCourses, storageTasks, storageProgress, storageContext);
     }
 
     public Reply start() {

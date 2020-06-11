@@ -24,6 +24,13 @@ public class StorageTasks implements Storage<Task, String, String> {
     }
 
     @Override
+    public void remove(Task task) {
+        if (!taskMap.isEmpty()) {
+            this.taskMap.remove(task.getCode());
+        }
+    }
+
+    @Override
     public String getIdByName(String name, String idCourse) {
         for (String i : taskMap.keySet()) {
             if (taskMap.get(i).getName().equals(name) && taskMap.get(i).getIdCourse().equals(idCourse)) {

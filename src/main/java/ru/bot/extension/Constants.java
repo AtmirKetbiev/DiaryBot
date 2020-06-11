@@ -5,21 +5,21 @@ import java.util.Calendar;
 public class Constants {
 
     //keyboard
-    public static String[][] startKeyboardTeacher = {{"Добавить курс", "Посмотреть курсы"},
+    public final static String[][] startKeyboardTeacher = {{"Добавить курс", "Посмотреть курсы"},
             {"Изменить профиль", "Помощь"}};
 
-    public static String[][] courseKeyboardTeacher = {{"Добавить задание", "Посмотреть задания"},
+    public final static String[][] courseKeyboardTeacher = {{"Добавить задание", "Посмотреть задания"},
             {"Группы", "Ссылки"},
             {"Изменить курс", "Удалить курс"}};
-    public static String[][] taskKeyboardTeacher = {{"Изменить задание", "Удалить задание"}};
-    public static String[][] studentTaskKeyboardTeacher = {{"Снять отметку", "Изменить оценку"},
+    public final static String[][] taskKeyboardTeacher = {{"Изменить задание", "Удалить задание"}};
+    public final static String[][] studentTaskKeyboardTeacher = {{"Снять отметку", "Изменить оценку"},
             {"Добавить комментарий", "История"}};
 
     //initialization
-    public static String BOT_USERNAME = "YourDiaryBot";
-    public static String TOKEN = System.getenv("BOT_TOKEN");
-    public static String TEACHER = "Преподаватель";
-    public static String STUDENT = "Студент";
+    public final static String BOT_USERNAME = "YourDiaryBot";
+    public final static String TOKEN = System.getenv("BOT_TOKEN");
+    public final static String TEACHER = "Преподаватель";
+    public final static String STUDENT = "Студент";
 
     //reserved buttons
     String[] keyboardWords = new String[]{

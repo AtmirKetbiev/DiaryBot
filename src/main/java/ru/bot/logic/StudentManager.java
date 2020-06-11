@@ -1,6 +1,5 @@
 package ru.bot.logic;
 
-import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.bot.db.*;
 import ru.bot.extension.Timetable;
 import ru.bot.objects.*;
@@ -10,22 +9,26 @@ import ru.bot.view.ViewTask;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class StudentManager {
 
     private StorageStudent storageStudent;
     private StorageCourses storageCourses;
     private StorageTasks storageTasks;
+    private StorageProgress storageProgress;
     private StorageContext storageContext;
     private ContextAnswer contextAnswer = new ContextAnswer();
 
     public StudentManager(StorageStudent storageStudent,
                           StorageCourses storageCourses,
                           StorageTasks storageTasks,
+                          StorageProgress storageProgress,
                           StorageContext storageContext) {
         this.storageStudent = storageStudent;
         this.storageCourses = storageCourses;
         this.storageTasks = storageTasks;
+        this.storageProgress = storageProgress;
         this.storageContext = storageContext;
     }
 
@@ -137,8 +140,15 @@ public class StudentManager {
 
         student.setCourses(idCourse);
         for (String idTask: course.getIdTasks()) {
-            Progress progress = student.getProgresses(idCourse, idTask);
-            student.addProgress(progress);
+            if (storageProgress.getId(id, idCourse, idTask).equals("")) {
+                Progress progress = new Progress();
+                progress.setIdProgress(UUID.randomUUID().toString().replace("-", ""));
+                progress.setIdStudent(id);
+                progress.setIdCourse(idCourse);
+                progress.setIdTask(idTask);
+                storageProgress.set(progress);
+                student.setProgresses(progress.getIdProgress());
+            }
         }
 
         storageStudent.set(id,student);
@@ -179,31 +189,28 @@ public class StudentManager {
     }
 
     public ContextAnswer markTask(Long id) {
-        Student student = storageStudent.get(id);
-        Progress progress = student.getProgresses(storageContext.get(id).getIdCourse(), storageContext.get(id).getIdTask());
+        String idProgress = storageProgress.getId(id, storageContext.get(id).getIdCourse(), storageContext.get(id).getIdTask());
+        Progress progress = storageProgress.get(idProgress);
         progress.setMark(true);
-        student.addProgress(progress);
-        storageStudent.set(id,student);
-        //storageStudent.set(id, student);
+        storageProgress.set(progress);
         contextAnswer.setAnswer("Отмеченно!");
         contextAnswer.setButtonsList(null);
         return contextAnswer;
     }
 
     public ContextAnswer commentTask(Long id, String text) {
-        Student student = storageStudent.get(id);
-        Progress progress = student.getProgresses(storageContext.get(id).getIdCourse(), storageContext.get(id).getIdTask());
+        String idProgress = storageProgress.getId(id, storageContext.get(id).getIdCourse(), storageContext.get(id).getIdTask());
+        Progress progress = storageProgress.get(idProgress);
         String massage = text.replaceAll("/com ", "");
-        progress.addComment("Студент" + storageStudent.get(id).getName() + ": " + massage + "\n");
-        student.addProgress(progress);
-        storageStudent.set(id,student);
+        progress.setComment("Студент" + storageStudent.get(id).getName() + ": " + massage + "\n");
+        storageProgress.set(progress);
         contextAnswer.setAnswer("Ваш комментарий сохранен.");
         return contextAnswer;
     }
 
     public ContextAnswer viewComment(Long id) {
-        Student student = storageStudent.get(id);
-        Progress progress = student.getProgresses(storageContext.get(id).getIdCourse(), storageContext.get(id).getIdTask());
+        String idProgress = storageProgress.getId(id, storageContext.get(id).getIdCourse(), storageContext.get(id).getIdTask());
+        Progress progress = storageProgress.get(idProgress);
         String comments = "";
         for (String s : progress.getComment()) {
             comments = comments + s;

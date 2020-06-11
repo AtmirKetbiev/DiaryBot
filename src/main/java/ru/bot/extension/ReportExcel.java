@@ -16,8 +16,8 @@ import java.util.Map;
 
 public class ReportExcel {
 
-    public File getReportFile(List<String> studentNameList, Map<String ,String> taskMap, Map<String, List<Progress>> studentProgress) throws IOException {
-        Workbook book = new HSSFWorkbook();
+    public File getReportFile(List<String> studentNameList, Map<String ,String> taskMap, List<String> studentProgress) throws IOException {
+        /*Workbook book = new HSSFWorkbook();
         Sheet sheet = book.createSheet("group");
 
         Row row = sheet.createRow(0);
@@ -43,14 +43,14 @@ public class ReportExcel {
                 cellNext2.setCellValue(pp.getGrade());
             }
             i++;
-        }
+        }*/
 
-        FileOutputStream fileOutputStream = new FileOutputStream("my.xls");
+        //FileOutputStream fileOutputStream = new FileOutputStream("./src/main/resources/report.xls");
 
-        book.write(fileOutputStream);
-        fileOutputStream.close();
+        //book.write(fileOutputStream);
+        //fileOutputStream.close();
 
-        return new File("my.xls");
+        return new File("./src/main/resources/report.xls");
     }
 
 }

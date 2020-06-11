@@ -24,6 +24,13 @@ public class StorageCourses implements Storage <Course, String, Long> {
     }
 
     @Override
+    public void remove(Course course) {
+        if (!courseMap.isEmpty()) {
+            this.courseMap.remove(course.getCode());
+        }
+    }
+
+    @Override
     public String getIdByName(String name, Long idTeacher) {
         for (String i : courseMap.keySet()) {
             if (courseMap.get(i).getName().equals(name) && courseMap.get(i).getIdTeacher().equals(idTeacher)) {
