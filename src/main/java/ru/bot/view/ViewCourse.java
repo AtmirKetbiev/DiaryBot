@@ -8,7 +8,7 @@ public class ViewCourse implements StringMaker<Course> {
     public String make(Course course) {
         return "Название курса:\n" + course.getName() +
                 "\n\nОписание курса:\n" + course.getDescription() +
-                "\n\nУникальный идентификатор:\n";
+                "\n\nУникальный идентификатор:\n" + course.getCode();
     }
 
 

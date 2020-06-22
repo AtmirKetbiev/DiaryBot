@@ -6,3 +6,4 @@ public interface Storage <T, X, Y> {
     void remove(T t);
     X getIdByName(String name, Y y);
 }
+

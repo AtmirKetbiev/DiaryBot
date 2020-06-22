@@ -41,7 +41,8 @@ public class TeacherAbility implements AbilityExtension {
         this.silent = silent;
         this.sender = sender;
         this.userStatus = userStatus;
-        this.teacherManager = new TeacherManager(storageTeacher, storageStudent, storageCourses, storageTasks, storageProgress, storageContext, storageCreate);
+        this.teacherManager = new TeacherManager(storageTeacher, storageStudent, storageCourses, storageTasks,
+                storageProgress, storageContext, storageCreate);
     }
 
     /**Старт..........................................................................................................*/
@@ -50,7 +51,8 @@ public class TeacherAbility implements AbilityExtension {
             id = update.getMessage().getChatId();
             String name =  update.getMessage().getChat().getFirstName();
 
-            silent.execute(Keyboard.constantKeyboard(Constants.startKeyboardTeacher, update, teacherManager.start(id, name).getAnswer()));
+            silent.execute(Keyboard.constantKeyboard(Constants.startKeyboardTeacher, update,
+                    teacherManager.start(id, name).getAnswer()));
         }, update -> userStatus.isTeacher(update.getMessage().getChatId()) &&
                 update.getMessage().getText().equals(Constants.TEACHER));
     }
@@ -63,7 +65,8 @@ public class TeacherAbility implements AbilityExtension {
             contextAnswer = teacherManager.back(id);
 
             if (contextAnswer.getButtonsList().get(0).equals("Добавить курс")) {
-                silent.execute(Keyboard.constantKeyboard(Constants.startKeyboardTeacher, update, teacherManager.start(id, text).getAnswer()));
+                silent.execute(Keyboard.constantKeyboard(Constants.startKeyboardTeacher, update,
+                        teacherManager.start(id, text).getAnswer()));
             } else {
                 silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
             }
@@ -90,7 +93,6 @@ public class TeacherAbility implements AbilityExtension {
         return Reply.of(update -> {
             id = update.getMessage().getChatId();
             text = update.getMessage().getText();
-
             silent.send(teacherManager.addCourse(id).getAnswer(), update.getMessage().getChatId());
         }, update -> userStatus.isTeacher(update.getMessage().getChatId()) &&
                 (update.getMessage().getText().equals("Добавить курс")
@@ -101,7 +103,6 @@ public class TeacherAbility implements AbilityExtension {
         return Reply.of(update -> {
             id = update.getMessage().getChatId();
             text = update.getMessage().getText();
-
             silent.send(teacherManager.addNextCourse(id, text).getAnswer(), update.getMessage().getChatId());
         }, update -> userStatus.isTeacher(update.getMessage().getChatId()) &&
                 storageCreate.getCreateCourse().get(update.getMessage().getChatId()) != null
@@ -113,7 +114,6 @@ public class TeacherAbility implements AbilityExtension {
         return Reply.of(update -> {
             id = update.getMessage().getChatId();
             text = update.getMessage().getText();
-
             contextAnswer = teacherManager.viewCourse(id);
             silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
         }, update -> userStatus.isTeacher(update.getMessage().getChatId()) &&
@@ -124,10 +124,10 @@ public class TeacherAbility implements AbilityExtension {
         return Reply.of(update -> {
             id = update.getMessage().getChatId();
             text = update.getMessage().getText();
-
             if (storageCreate.getCreateCourse().get(update.getMessage().getChatId())==null &&
                     storageCreate.getCreateTask().get(update.getMessage().getChatId())==null) {
-                silent.execute(Keyboard.constantKeyboard(Constants.courseKeyboardTeacher, update, teacherManager.course(id, text).getAnswer()));
+                silent.execute(Keyboard.constantKeyboard(Constants.courseKeyboardTeacher, update,
+                        teacherManager.course(id, text).getAnswer()));
             }
         }, update -> userStatus.isTeacher(update.getMessage().getChatId()) &&
                 !teacherManager.getCourse(update.getMessage().getChatId()).isEmpty() &&
@@ -159,7 +159,8 @@ public class TeacherAbility implements AbilityExtension {
 
             contextAnswer = teacherManager.delCourse(id);
             if (contextAnswer.getButtonsList().get(0).equals("Добавить курс")) {
-                silent.execute(Keyboard.constantKeyboard(Constants.startKeyboardTeacher, update, teacherManager.start(id, text).getAnswer()));
+                silent.execute(Keyboard.constantKeyboard(Constants.startKeyboardTeacher, update,
+                        teacherManager.start(id, text).getAnswer()));
             } else {
                 silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
             }
@@ -183,7 +184,6 @@ public class TeacherAbility implements AbilityExtension {
         return Reply.of(update -> {
             id = update.getMessage().getChatId();
             text = update.getMessage().getText();
-
             silent.send(teacherManager.addNextTask(id, text).getAnswer(), update.getMessage().getChatId());
         }, update -> userStatus.isTeacher(update.getMessage().getChatId()) &&
                 storageCreate.getCreateTask().get(update.getMessage().getChatId()) != null
@@ -195,7 +195,6 @@ public class TeacherAbility implements AbilityExtension {
         return Reply.of(update -> {
             id = update.getMessage().getChatId();
             text = update.getMessage().getText();
-
             contextAnswer = teacherManager.viewTask(id);
             silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
         }, update -> userStatus.isTeacher(update.getMessage().getChatId()) &&
@@ -206,7 +205,6 @@ public class TeacherAbility implements AbilityExtension {
         return Reply.of(update -> {
             id = update.getMessage().getChatId();
             text = update.getMessage().getText();
-
             if (teacherManager.getTask(update.getMessage().getChatId()).contains(update.getMessage().getText())) {
                 contextAnswer = teacherManager.task(id, text);
                 silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
@@ -219,7 +217,6 @@ public class TeacherAbility implements AbilityExtension {
         return Reply.of(update -> {
             id = update.getMessage().getChatId();
             text = update.getMessage().getText();
-
             contextAnswer = teacherManager.delTask(id);
             silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
         }, update -> userStatus.isTeacher(update.getMessage().getChatId()) &&
@@ -232,7 +229,6 @@ public class TeacherAbility implements AbilityExtension {
         return Reply.of(update -> {
             id = update.getMessage().getChatId();
             text = update.getMessage().getText();
-
             contextAnswer = teacherManager.viewGroup(id);
             silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
         }, update -> userStatus.isTeacher(update.getMessage().getChatId()) &&
@@ -243,7 +239,6 @@ public class TeacherAbility implements AbilityExtension {
         return Reply.of(update -> {
             id = update.getMessage().getChatId();
             text = update.getMessage().getText();
-
             contextAnswer = teacherManager.group(id, text);
             silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
         }, update -> userStatus.isTeacher(update.getMessage().getChatId()) &&

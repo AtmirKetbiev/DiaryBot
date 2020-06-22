@@ -34,19 +34,16 @@ public class StudentManager {
 
     public ContextAnswer start(Long id, String name) {
         storageContext.set(id, new Context());
-
         if (storageStudent.get(id)==null) {
             Student student = new Student();
-            student.setName("Студент" + name);
+            student.setName("Студент " + name);
             student.setGroup("1-пми");
             storageStudent.set(id, student);
         }
-
-        contextAnswer.setAnswer("Добро пожаловать!");
+        contextAnswer.setAnswer("Добро пожаловать! Чтобы подписаться на курс введите команду /newCourse *id*");
         contextAnswer.setButtonsList(Arrays.asList("Расписание", "Курсы", "Подписаться на курс", "Помощь"));
         return contextAnswer;
     }
-
     public ContextAnswer back(Long id) {
         Context context = storageContext.get(id);
         if (context.getIdTask() == null && context.getIdCourse() == null) {
@@ -129,7 +126,7 @@ public class StudentManager {
     }
 
     public ContextAnswer addCourse(Long id, String text) {
-        String idCourse = text.replaceAll("/add ", "");
+        String idCourse = text.replaceAll("/newCourse ", "");
 
         Student student = storageStudent.get(id);
 
@@ -202,7 +199,7 @@ public class StudentManager {
         String idProgress = storageProgress.getId(id, storageContext.get(id).getIdCourse(), storageContext.get(id).getIdTask());
         Progress progress = storageProgress.get(idProgress);
         String massage = text.replaceAll("/com ", "");
-        progress.setComment("Студент" + storageStudent.get(id).getName() + ": " + massage + "\n");
+        progress.setComment(storageStudent.get(id).getName() + ": " + massage + "\n");
         storageProgress.set(progress);
         contextAnswer.setAnswer("Ваш комментарий сохранен.");
         return contextAnswer;

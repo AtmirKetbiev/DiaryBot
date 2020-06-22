@@ -6,30 +6,24 @@ import ru.bot.objects.Course;
 import java.util.Map;
 
 public class StorageCourses implements Storage <Course, String, Long> {
-
     private Map<String, Course> courseMap;
-
     public StorageCourses(DBContext db){
         this.courseMap = db.getMap("Courses");
     }
-
     @Override
     public Course get(String id) {
         return courseMap.get(id);
     }
-
     @Override
     public void set(Course course) {
             this.courseMap.put(course.getCode(), course);
     }
-
     @Override
     public void remove(Course course) {
         if (!courseMap.isEmpty()) {
             this.courseMap.remove(course.getCode());
         }
     }
-
     @Override
     public String getIdByName(String name, Long idTeacher) {
         for (String i : courseMap.keySet()) {

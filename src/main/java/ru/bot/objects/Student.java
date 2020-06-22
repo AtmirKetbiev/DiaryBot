@@ -8,7 +8,6 @@ public class Student implements Serializable {
     private String name;
     private String group;
     private List<String> courses  = new ArrayList<>();
-    //private Map<Integer, Progress> progresses = new HashMap<>();
     private List<String> progresses  = new ArrayList<>();
 
     public String getName() {
@@ -45,37 +44,8 @@ public class Student implements Serializable {
         progresses.remove(progress);
     }
 
-    /*public void addProgress(Progress progress) {
-        for (int i : progresses.keySet()) {
-            if (progresses.get(i).getIdCourse().equals(progress.getIdCourse()) && progresses.get(i).getIdTask().equals(progress.getIdTask())) {
-                progresses.put(i, progress);
-                return;
-            }
-        }
-        progresses.put(progresses.size(), progress);
-    }
-   public Progress getProgresses(String idCourse, String idTask) {
-        if (progresses.size()==0) {
-            Progress progress = new Progress();
-            progress.setIdCourse(idCourse);
-            progress.setIdTask(idTask);
-            return progress;
-        } else {
-            for (int i : progresses.keySet()) {
-                if (progresses.get(i).getIdCourse().equals(idCourse) && progresses.get(i).getIdTask().equals(idTask)) {
-                    return progresses.get(i);
-                }
-            }
-        }
-        Progress progress = new Progress();
-        progress.setIdCourse(idCourse);
-        progress.setIdTask(idTask);
-        return progress;
-    }*/
     public List<String> getProgresses(String idCourse) {
         return progresses;
     }
-    /*public void setProgresses(Map<Integer, Progress> progresses) {
-        this.progresses = progresses;
-    }*/
+
 }

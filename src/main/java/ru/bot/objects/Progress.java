@@ -16,7 +16,6 @@ public class Progress implements Serializable {
     public String getIdProgress() {
         return idProgress;
     }
-
     public void setIdProgress(String idProgress) {
         this.idProgress = idProgress;
     }
@@ -24,7 +23,6 @@ public class Progress implements Serializable {
     public Long getIdStudent() {
         return idStudent;
     }
-
     public void setIdStudent(Long idStudent) {
         this.idStudent = idStudent;
     }
@@ -32,7 +30,6 @@ public class Progress implements Serializable {
     public String getIdCourse() {
         return idCourse;
     }
-
     public void setIdCourse(String idCourse) {
         this.idCourse = idCourse;
     }
@@ -40,7 +37,6 @@ public class Progress implements Serializable {
     public String getIdTask() {
         return idTask;
     }
-
     public void setIdTask(String idTask) {
         this.idTask = idTask;
     }
@@ -48,7 +44,6 @@ public class Progress implements Serializable {
     public boolean isMark() {
         return mark;
     }
-
     public void setMark(boolean mark) {
         this.mark = mark;
     }
@@ -56,7 +51,6 @@ public class Progress implements Serializable {
     public String getGrade() {
         return grade;
     }
-
     public void setGrade(String grade) {
         this.grade = grade;
     }
@@ -64,7 +58,6 @@ public class Progress implements Serializable {
     public List<String> getComment() {
         return comments;
     }
-
     public void setComment(String comment) {
             this.comments.add(comment);
     }

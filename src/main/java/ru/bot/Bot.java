@@ -31,12 +31,14 @@ public class Bot extends AbilityBot {
 
     public AbilityExtension abilityT() {
         dbInit();
-        return new TeacherAbility(sender, silent, storageTeacher, storageStudent, storageCourses, storageTasks, storageProgress, storageContext, storageCreate, userStatus);
+        return new TeacherAbility(sender, silent, storageTeacher, storageStudent, storageCourses, storageTasks,
+                storageProgress, storageContext, storageCreate, userStatus);
     }
 
     public AbilityExtension abilityS() {
         dbInit();
-        return new StudentAbility(silent, storageStudent, storageCourses, storageTasks, storageProgress, storageContext, userStatus);
+        return new StudentAbility(silent, storageStudent, storageCourses, storageTasks, storageProgress, storageContext,
+                userStatus);
     }
 
     private void dbInit() {
@@ -56,15 +58,12 @@ public class Bot extends AbilityBot {
     public int creatorId() {
         return 0;
     }
-
     @Override
     public String getBotUsername() {
         return Constants.BOT_USERNAME;
     }
-
     @Override
     public String getBotToken() {
         return Constants.TOKEN;
     }
-
 }

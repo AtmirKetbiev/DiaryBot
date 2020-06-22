@@ -1,6 +1,4 @@
 package ru.bot.logic;
-
-import org.telegram.abilitybots.api.db.DBContext;
 import org.telegram.abilitybots.api.objects.Flag;
 import org.telegram.abilitybots.api.objects.Reply;
 import org.telegram.abilitybots.api.sender.SilentSender;
@@ -8,7 +6,6 @@ import org.telegram.abilitybots.api.util.AbilityExtension;
 import ru.bot.db.UserStatus;
 import ru.bot.extension.Constants;
 import ru.bot.extension.Keyboard;
-
 import java.util.Arrays;
 
 public class StartAbility implements AbilityExtension {
@@ -25,12 +22,9 @@ public class StartAbility implements AbilityExtension {
     public Reply start() {
         return Reply.of(update -> {
             Long id = update.getMessage().getChatId();
-
             userStatus.remove(id);
-
-            contextAnswer.setAnswer("Кто вы?!");
+            contextAnswer.setAnswer("Здравствуйте! Укажите кем вы являетесь.");
             contextAnswer.setButtonsList(Arrays.asList("Преподаватель", "Студент"));
-
             silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
         }, update -> update.getMessage().getText().equals("/start"));
     }

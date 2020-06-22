@@ -47,7 +47,7 @@ public class TeacherManager {
 
         if (storageTeacher.get(id)==null) {
             Teacher teacher = new Teacher();
-            teacher.setName(name);
+            teacher.setName("Преподаватель " + name);
             storageTeacher.set(id, teacher);
         }
 
@@ -141,7 +141,7 @@ public class TeacherManager {
                 teacher.addCourses(course.getCode());
                 storageTeacher.set(course.getIdTeacher(), teacher);
                 storageCreate.removeCreateCourse(id);
-                contextAnswer.setAnswer("Спасибо");
+                contextAnswer.setAnswer("Ваш курс успешно добавлен!");
             } else {
                 storageCreate.setCreateCourse(newCourse);
             }
@@ -161,8 +161,9 @@ public class TeacherManager {
         storageContext.set(id, context);
 
         ViewCourse view = new ViewCourse();
-        contextAnswer.setAnswer(view.make(storageCourses.get(context.getIdCourse()))+context.getIdCourse());
-        contextAnswer.setButtonsList(Arrays.asList("Добавить задание", "Посмотреть задания", "Группы", "Ссылки", "Изменить курс", "Удалить курс"));
+        contextAnswer.setAnswer(view.make(storageCourses.get(context.getIdCourse())));
+        contextAnswer.setButtonsList(Arrays.asList("Добавить задание", "Посмотреть задания", "Группы", "Ссылки",
+                "Изменить курс", "Удалить курс"));
         return contextAnswer;
     }
 
@@ -238,11 +239,11 @@ public class TeacherManager {
                 newTask.setName(text);
             } else if (newTask.getDescription() == null) {
                 newTask.setDescription(text);
-                contextAnswer.setAnswer("введите soft в формате dd/mm/yyyy");
+                contextAnswer.setAnswer("введите soft дедлайн в формате dd/mm/yyyy");
             } else if (newTask.getSoft() == null) {
                 try {
                     newTask.setSoft(text);
-                    contextAnswer.setAnswer("введите hard в формате dd/mm/yyyy");
+                    contextAnswer.setAnswer("введите hard дедлайн в формате dd/mm/yyyy");
                 } catch (ParseException e) {
                     contextAnswer.setAnswer("Не правильная дата, введите в формате dd/mm/yyyy");
                 }
@@ -288,13 +289,19 @@ public class TeacherManager {
         storageContext.set(id, context);
 
         if (context.getIdStudent() != -1) {
-            contextAnswer.setAnswer("Вы выбрали задание " + text);
+            //contextAnswer.setAnswer("Вы выбрали задание " + text + "\nстатус задания: ");
+            String idProgress = storageProgress.getId(context.getIdStudent(), context.getIdCourse(), context.getIdTask());
+            if (storageProgress.get(idProgress).isMark()) {
+                contextAnswer.setAnswer("Вы выбрали задание " + text + "\nСтатус задания: Выполненно \nОценка: " + storageProgress.get(idProgress).getGrade());
+            } else {
+                contextAnswer.setAnswer("Вы выбрали задание " + text + "\nСтатус задания: Не выполненно \nОценка: " + storageProgress.get(idProgress).getGrade());
+            }
 
             contextAnswer.setButtonsList(Arrays.asList("Снять отметку", "Изменить оценку", "Добавить комментарий"));
         } else {
             ViewTask view = new ViewTask();
             Task t = storageTasks.get(context.getIdTask());
-            contextAnswer.setAnswer(view.make(storageTasks.get(context.getIdTask()))+context.getIdCourse());
+            contextAnswer.setAnswer(view.make(storageTasks.get(context.getIdTask())));
             contextAnswer.setButtonsList(Arrays.asList("Изменить задание", "Удалить задание"));
         }
         return contextAnswer;
@@ -369,11 +376,9 @@ public class TeacherManager {
     public File statistic(Long id, String text) throws IOException {
         String groupName = storageContext.get(id).getIdGroup();
         String idCourse = storageContext.get(id).getIdCourse();
-
         Context context = storageContext.get(id);
         context.setIdGroup(groupName);
         storageContext.set(id, context);
-
         /**имена студентов*/
         List<Long> studentList = new ArrayList<>(0);
         List<String> studentNameList = new ArrayList<>(0);
@@ -383,7 +388,6 @@ public class TeacherManager {
                 studentNameList.add(storageStudent.get(idStudent).getName());
             }
         }
-
         /**список прогрессов*/
         List<String> progressMap = new  ArrayList<>();
         for (Long idStudent: studentList) {
@@ -393,7 +397,6 @@ public class TeacherManager {
                 progressMap.addAll(progress);
             }
         }
-
         /**список названий заданий*/
         Map<String ,String> taskMap  = new HashMap<>();
         for (String s: storageCourses.get(context.getIdCourse()).getIdTasks()) {
@@ -401,9 +404,7 @@ public class TeacherManager {
                 taskMap.put(s, storageTasks.get(s).getName());
             }
         }
-
         ReportExcel reportExcel = new ReportExcel();
-
         return reportExcel.getReportFile(studentNameList, taskMap, progressMap);
     }
 
@@ -411,11 +412,9 @@ public class TeacherManager {
         String idCourse = storageContext.get(id).getIdCourse();
         String nameGroup = storageContext.get(id).getIdGroup();
         List<String> myArray = new ArrayList<String>(0);
-
         Context context = storageContext.get(id);
         context.setIdGroup(nameGroup);
         storageContext.set(id, context);
-
         for (Long i : storageCourses.get(idCourse).getStudents()) {
             if (storageStudent.get(i).getGroup().equals(nameGroup)) {
                 myArray.add(storageStudent.get(i).getName());
@@ -460,7 +459,8 @@ public class TeacherManager {
     public ContextAnswer unmark(Long id) {
         Long idStudent = storageContext.get(id).getIdStudent();
 
-        String idProgress = storageProgress.getId(idStudent, storageContext.get(id).getIdCourse(), storageContext.get(id).getIdTask());
+        String idProgress = storageProgress.getId(idStudent, storageContext.get(id).getIdCourse(),
+                storageContext.get(id).getIdTask());
         Progress progress = storageProgress.get(idProgress);
         progress.setMark(false);
         storageProgress.set(progress);
@@ -473,7 +473,8 @@ public class TeacherManager {
         String massage = text.replaceAll("/grade ", "");
         Long idStudent = storageContext.get(id).getIdStudent();
 
-        String idProgress = storageProgress.getId(idStudent, storageContext.get(id).getIdCourse(), storageContext.get(id).getIdTask());
+        String idProgress = storageProgress.getId(idStudent, storageContext.get(id).getIdCourse(),
+                storageContext.get(id).getIdTask());
         Progress progress = storageProgress.get(idProgress);
         progress.setGrade(massage);
         storageProgress.set(progress);
@@ -485,7 +486,8 @@ public class TeacherManager {
     public ContextAnswer commentTask(Long id, String text) {
         Long idStudent = storageContext.get(id).getIdStudent();
 
-        String idProgress = storageProgress.getId(idStudent, storageContext.get(id).getIdCourse(), storageContext.get(id).getIdTask());
+        String idProgress = storageProgress.getId(idStudent, storageContext.get(id).getIdCourse(),
+                storageContext.get(id).getIdTask());
         Progress progress = storageProgress.get(idProgress);
 
         String massage = text.replaceAll("/com ", "");

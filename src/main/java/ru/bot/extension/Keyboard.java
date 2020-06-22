@@ -29,7 +29,7 @@ public class Keyboard {
             keyboardRow = new KeyboardRow();
         }
 
-        if (!text.isEmpty()) {
+        if (!text.isEmpty() ) {
             keyboardRow.add("Назад");
             keyboard.add(keyboardRow);
             sendMessage.setText(answer);

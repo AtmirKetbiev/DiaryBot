@@ -1,6 +1,5 @@
 package ru.bot.logic;
 
-import org.telegram.abilitybots.api.db.DBContext;
 import org.telegram.abilitybots.api.objects.*;
 import org.telegram.abilitybots.api.sender.SilentSender;
 import ru.bot.db.*;
@@ -35,7 +34,7 @@ public class StudentAbility implements org.telegram.abilitybots.api.util.Ability
             String name =  update.getMessage().getChat().getFirstName();
 
             contextAnswer = studentManager.start(id, name);
-            silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
+            silent.execute(Keyboard.constantKeyboard(Constants.startKeyboardStudent, update, contextAnswer.getAnswer()));
         }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
                 update.getMessage().getText().equals(Constants.STUDENT));
     }
@@ -93,7 +92,7 @@ public class StudentAbility implements org.telegram.abilitybots.api.util.Ability
             contextAnswer = studentManager.addCourse(id, text);
             silent.send(contextAnswer.getAnswer(), update.getMessage().getChatId());
             }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
-                update.getMessage().getText().startsWith("/add"));
+                update.getMessage().getText().startsWith("/newCourse"));
     }
 
     public Reply delCourse() {
@@ -106,14 +105,10 @@ public class StudentAbility implements org.telegram.abilitybots.api.util.Ability
         }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
                 update.getMessage().getText().equals("Отписаться"));
     }
-
-    /**...............................................................................................................*/
-
     public Reply task() {
         return Reply.of(update -> {
             id = update.getMessage().getChatId();
             text = update.getMessage().getText();
-
             if (studentManager.getTask(update.getMessage().getChatId()).contains(update.getMessage().getText())) {
                 contextAnswer = studentManager.task(id, text);
                 silent.execute(Keyboard.listKeyboard(contextAnswer.getButtonsList(), update, contextAnswer.getAnswer()));
@@ -123,7 +118,6 @@ public class StudentAbility implements org.telegram.abilitybots.api.util.Ability
         }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
                 studentManager.getTask(update.getMessage().getChatId()).contains(update.getMessage().getText()));
     }
-
     public Reply viewTask() {
         return Reply.of(update -> {
             id = update.getMessage().getChatId();
@@ -164,5 +158,4 @@ public class StudentAbility implements org.telegram.abilitybots.api.util.Ability
         }, update -> userStatus.isStudent(update.getMessage().getChatId()) &&
                 update.getMessage().getText().startsWith("История комментариев"));
     }
-
 }
